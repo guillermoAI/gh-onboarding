@@ -16,6 +16,7 @@
         .nav-item { display: block; padding: 10px 12px; color: #666; text-decoration: none; font-size: 13px; cursor: pointer; transition: all 0.15s; border-radius: 4px; margin-bottom: 2px; }
         .nav-item:hover { color: #fff; background: #111; }
         .nav-item.active { color: #fff; background: #111; }
+        .nav-item.highlight { color: #4ade80; }
         .sidebar-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid #1a1a1a; }
         .user-info { display: flex; align-items: center; gap: 10px; }
         .user-avatar { width: 32px; height: 32px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; }
@@ -23,7 +24,7 @@
         .user-email { font-size: 10px; color: #666; }
         
         /* Main */
-        .main { flex: 1; margin-left: 200px; padding: 32px; }
+        .main { flex: 1; margin-left: 200px; padding: 32px; max-width: 1200px; }
         
         /* Page Header */
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid #1a1a1a; }
@@ -33,86 +34,127 @@
         .btn:hover { border-color: #666; }
         .btn-primary { background: #fff; color: #000; border-color: #fff; }
         .btn-primary:hover { background: #eee; }
+        .btn-success { background: #4ade80; color: #000; border-color: #4ade80; }
         .header-btns { display: flex; gap: 8px; }
         
+        /* Alert Banner */
+        .alert { padding: 16px 20px; border: 1px solid #4ade80; background: rgba(74,222,128,0.1); margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
+        .alert-text { font-size: 13px; }
+        .alert-text strong { color: #4ade80; }
+        
         /* Stats Grid */
-        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #1a1a1a; margin-bottom: 32px; }
-        .stat { background: #000; padding: 20px; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+        .stat { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 20px; }
         .stat-label { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
         .stat-value { font-size: 28px; font-weight: 300; }
         .stat-sub { font-size: 11px; color: #666; margin-top: 4px; }
+        .stat-change { font-size: 11px; margin-top: 4px; }
+        .stat-change.up { color: #4ade80; }
+        .stat-change.down { color: #f87171; }
         
         /* Cards */
         .grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; }
-        .card { border: 1px solid #1a1a1a; padding: 20px; margin-bottom: 20px; }
-        .card-title { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #1a1a1a; }
+        .grid-equal { grid-template-columns: 1fr 1fr; }
+        .card { border: 1px solid #1a1a1a; padding: 20px; margin-bottom: 20px; background: #0a0a0a; }
+        .card-title { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
+        .card-title span { color: #888; font-size: 10px; text-transform: none; letter-spacing: 0; }
         
         /* Progress */
-        .progress-row { margin-bottom: 16px; }
+        .progress-row { margin-bottom: 20px; }
         .progress-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
         .progress-header span:last-child { color: #666; }
-        .progress-bar { height: 3px; background: #1a1a1a; }
-        .progress-fill { height: 100%; background: #fff; }
+        .progress-bar { height: 4px; background: #1a1a1a; border-radius: 2px; }
+        .progress-fill { height: 100%; background: #fff; border-radius: 2px; transition: width 0.3s; }
+        .progress-fill.green { background: #4ade80; }
         
         /* Tasks */
-        .task { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #1a1a1a; cursor: pointer; }
+        .task { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid #1a1a1a; cursor: pointer; }
         .task:last-child { border-bottom: none; }
-        .task-check { width: 16px; height: 16px; border: 1px solid #444; display: flex; align-items: center; justify-content: center; font-size: 10px; }
-        .task.done .task-check { background: #fff; color: #000; }
+        .task-check { width: 18px; height: 18px; border: 1px solid #444; display: flex; align-items: center; justify-content: center; font-size: 11px; border-radius: 3px; }
+        .task.done .task-check { background: #4ade80; border-color: #4ade80; color: #000; }
         .task-text { flex: 1; font-size: 13px; }
         .task.done .task-text { text-decoration: line-through; color: #666; }
-        .task-tag { font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 6px; border: 1px solid #333; }
+        .task-tag { font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 8px; border: 1px solid #333; border-radius: 3px; }
+        .task-tag.urgent { border-color: #f87171; color: #f87171; }
         
         /* Info blocks */
-        .info-block { padding: 16px; border: 1px solid #1a1a1a; margin-bottom: 12px; }
+        .info-block { padding: 16px; border: 1px solid #1a1a1a; margin-bottom: 12px; background: #050505; }
         .info-label { font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .info-text { font-size: 13px; color: #888; line-height: 1.5; }
+        .info-text { font-size: 13px; color: #ccc; line-height: 1.6; }
         
-        /* Summary */
-        .summary { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #1a1a1a; }
-        .summary-item { background: #000; padding: 16px; text-align: center; }
-        .summary-value { font-size: 20px; font-weight: 300; }
-        .summary-label { font-size: 10px; color: #666; margin-top: 4px; }
+        /* Weekly History */
+        .week-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #1a1a1a; font-size: 13px; }
+        .week-row:last-child { border-bottom: none; }
+        .week-date { width: 100px; color: #666; }
+        .week-metric { flex: 1; text-align: center; }
+        .week-metric small { display: block; color: #666; font-size: 10px; margin-top: 2px; }
         
-        /* Page sections - hide all except active */
+        /* Form */
+        .form-group { margin-bottom: 20px; }
+        .form-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block; }
+        .form-input { width: 100%; padding: 12px; background: #111; border: 1px solid #222; color: #fff; font-size: 14px; font-family: inherit; }
+        .form-input:focus { outline: none; border-color: #444; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-hint { font-size: 11px; color: #666; margin-top: 4px; }
+        textarea.form-input { min-height: 80px; resize: vertical; }
+        
+        /* Resources */
+        .resource { display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid #1a1a1a; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; }
+        .resource:hover { border-color: #333; background: #111; }
+        .resource-icon { width: 36px; height: 36px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 16px; border-radius: 4px; }
+        .resource-info { flex: 1; }
+        .resource-title { font-size: 13px; margin-bottom: 2px; }
+        .resource-desc { font-size: 11px; color: #666; }
+        .resource-tag { font-size: 9px; color: #4ade80; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* Recommendations */
+        .rec { padding: 16px; border-left: 3px solid #4ade80; background: #0a0a0a; margin-bottom: 12px; }
+        .rec-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+        .rec-text { font-size: 12px; color: #888; line-height: 1.5; }
+        .rec.warning { border-color: #fbbf24; }
+        .rec.info { border-color: #60a5fa; }
+        
+        /* Page sections */
         .page { display: none; }
         .page.active { display: block; }
         
-        /* Coming soon */
-        .coming-soon { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; text-align: center; border: 1px solid #1a1a1a; }
-        .coming-soon h2 { font-size: 18px; font-weight: 400; margin-bottom: 8px; }
-        .coming-soon p { color: #666; font-size: 13px; }
-        
-        /* Social metrics */
-        .social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-        .social-card { border: 1px solid #1a1a1a; padding: 20px; }
-        .social-platform { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-        .social-stat { font-size: 24px; font-weight: 300; margin-bottom: 4px; }
-        .social-label { font-size: 11px; color: #666; }
-        
-        /* Funnel */
-        .funnel-step { display: flex; align-items: center; gap: 16px; padding: 16px; border: 1px solid #1a1a1a; margin-bottom: 8px; }
-        .funnel-num { width: 32px; height: 32px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; }
-        .funnel-info { flex: 1; }
-        .funnel-title { font-size: 14px; margin-bottom: 4px; }
-        .funnel-desc { font-size: 12px; color: #666; }
-        .funnel-metric { text-align: right; }
-        .funnel-value { font-size: 18px; font-weight: 300; }
-        .funnel-label { font-size: 10px; color: #666; }
+        /* Roadmap */
+        .phase { border: 1px solid #1a1a1a; margin-bottom: 16px; }
+        .phase-header { padding: 16px; background: #0a0a0a; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .phase-num { width: 28px; height: 28px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 4px; }
+        .phase-num.complete { background: #4ade80; border-color: #4ade80; color: #000; }
+        .phase-num.current { background: #fff; border-color: #fff; color: #000; }
+        .phase-info { flex: 1; }
+        .phase-title { font-size: 14px; }
+        .phase-desc { font-size: 11px; color: #666; margin-top: 2px; }
+        .phase-status { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border-radius: 3px; }
+        .phase-status.complete { background: rgba(74,222,128,0.2); color: #4ade80; }
+        .phase-status.current { background: rgba(255,255,255,0.1); color: #fff; }
+        .phase-status.pending { color: #666; }
         
         /* Empty state */
-        .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; text-align: center; }
-        .empty h2 { font-size: 18px; font-weight: 400; margin-bottom: 8px; }
-        .empty p { color: #666; font-size: 13px; margin-bottom: 24px; }
-        .empty a { padding: 12px 24px; background: #fff; color: #000; text-decoration: none; font-size: 13px; font-weight: 500; }
+        .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; text-align: center; }
+        .empty h2 { font-size: 16px; font-weight: 400; margin-bottom: 8px; }
+        .empty p { color: #666; font-size: 13px; margin-bottom: 20px; }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 24px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .modal-title { font-size: 16px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #1a1a1a; }
+        .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #666; font-size: 24px; cursor: pointer; }
+        
+        /* Notification dot */
+        .notif-dot { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; display: inline-block; margin-left: 6px; }
         
         @media (max-width: 900px) {
             .stats { grid-template-columns: repeat(2, 1fr); }
             .grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
         }
         @media (max-width: 600px) {
             .sidebar { display: none; }
-            .main { margin-left: 0; }
+            .main { margin-left: 0; padding: 20px; }
             .stats { grid-template-columns: 1fr; }
         }
     </style>
@@ -123,14 +165,14 @@
             <div class="logo">GH CONSULTING</div>
             <div class="nav-label">Principal</div>
             <div class="nav-item active" onclick="showPage('dashboard')">Dashboard</div>
-            <div class="nav-item" onclick="showPage('objetivos')">Objetivos</div>
-            <div class="nav-item" onclick="showPage('metricas')">Métricas</div>
-            <div class="nav-label">Contenido</div>
-            <div class="nav-item" onclick="showPage('redes')">Redes Sociales</div>
-            <div class="nav-item" onclick="showPage('embudo')">Embudo</div>
-            <div class="nav-label">Gestión</div>
+            <div class="nav-item" onclick="showPage('progreso')">Mi Progreso</div>
+            <div class="nav-item" onclick="showPage('roadmap')">Roadmap</div>
+            <div class="nav-label">Semanal</div>
+            <div class="nav-item highlight" onclick="showPage('reporte')">📝 Reporte Semanal<span class="notif-dot" id="reportDot"></span></div>
             <div class="nav-item" onclick="showPage('tareas')">Tareas</div>
-            <div class="nav-item" onclick="showPage('reportes')">Reportes</div>
+            <div class="nav-label">Recursos</div>
+            <div class="nav-item" onclick="showPage('recursos')">Clases y Guías</div>
+            <div class="nav-item" onclick="showPage('herramientas')">Herramientas</div>
             <div class="sidebar-footer">
                 <div class="user-info">
                     <div class="user-avatar" id="avatar">--</div>
@@ -144,15 +186,71 @@
         
         <main class="main" id="main"></main>
     </div>
+    
+    <!-- Modal for weekly report -->
+    <div class="modal" id="reportModal">
+        <div class="modal-content">
+            <div class="modal-title">📝 Reporte Semanal</div>
+            <form id="weeklyForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Ingresos esta semana (€)</label>
+                        <input type="number" class="form-input" id="rpt_ingresos" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nuevos clientes</label>
+                        <input type="number" class="form-input" id="rpt_clientes" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Calls realizadas</label>
+                        <input type="number" class="form-input" id="rpt_calls" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Leads/DMs recibidos</label>
+                        <input type="number" class="form-input" id="rpt_leads" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Contenido publicado</label>
+                        <input type="number" class="form-input" id="rpt_contenido" placeholder="0">
+                        <div class="form-hint">Reels, posts, stories, videos</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nuevos seguidores</label>
+                        <input type="number" class="form-input" id="rpt_seguidores" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">¿Qué funcionó bien esta semana?</label>
+                    <textarea class="form-input" id="rpt_wins" placeholder="Logros, avances, victorias..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">¿Qué problemas encontraste?</label>
+                    <textarea class="form-input" id="rpt_problems" placeholder="Bloqueos, dudas, obstáculos..."></textarea>
+                </div>
+                <div style="display:flex;gap:12px;margin-top:24px;">
+                    <button type="button" class="btn" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-success" style="flex:1;">Enviar Reporte</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 <script>
 var data = null;
 try { var s = localStorage.getItem('gh_client_data'); if (s) data = JSON.parse(s); } catch(e) {}
 
+// Weekly reports history
+var weeklyReports = [];
+try { var w = localStorage.getItem('gh_weekly_reports'); if (w) weeklyReports = JSON.parse(w); } catch(e) {}
+
 var main = document.getElementById('main');
 
 if (!data || !data.nombre) {
-    main.innerHTML = '<div class="empty"><h2>Sin datos</h2><p>Completa el onboarding primero</p><a href="index.html">Ir al Onboarding</a></div>';
+    main.innerHTML = '<div class="empty" style="min-height:80vh;"><h2>Sin datos</h2><p>Completa el onboarding primero</p><a href="index.html" class="btn btn-primary">Ir al Onboarding</a></div>';
 } else {
     var hour = new Date().getHours();
     var greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
@@ -166,161 +264,203 @@ if (!data || !data.nombre) {
     var ticket = parseInt(data.ticket) || 0;
     var progreso = objetivo > 0 ? Math.round((ingresos / objetivo) * 100) : 0;
     
+    // Calculate totals from weekly reports
+    var totalWeeklyIngresos = 0;
+    var totalWeeklyClientes = 0;
+    var totalWeeklyCalls = 0;
+    var totalWeeklyLeads = 0;
+    var totalWeeklyContenido = 0;
+    weeklyReports.forEach(function(r) {
+        totalWeeklyIngresos += parseInt(r.ingresos) || 0;
+        totalWeeklyClientes += parseInt(r.clientes) || 0;
+        totalWeeklyCalls += parseInt(r.calls) || 0;
+        totalWeeklyLeads += parseInt(r.leads) || 0;
+        totalWeeklyContenido += parseInt(r.contenido) || 0;
+    });
+    
+    var currentIngresos = ingresos + totalWeeklyIngresos;
+    var currentClientes = clientes + totalWeeklyClientes;
+    var currentProgreso = objetivo > 0 ? Math.round((currentIngresos / objetivo) * 100) : 0;
+    
+    // Check if report needed this week
+    var lastReport = weeklyReports.length > 0 ? new Date(weeklyReports[weeklyReports.length-1].date) : null;
+    var daysSinceReport = lastReport ? Math.floor((new Date() - lastReport) / (1000*60*60*24)) : 999;
+    var needsReport = daysSinceReport >= 7;
+    
     document.getElementById('avatar').textContent = initials;
     document.getElementById('userName').textContent = data.nombre;
     document.getElementById('userEmail').textContent = data.email;
+    if (!needsReport) document.getElementById('reportDot').style.display = 'none';
+    
+    // Generate recommendations based on data
+    var recommendations = [];
+    if (currentProgreso < 30) {
+        recommendations.push({type:'warning', title:'Acelera tu captación', text:'Estás al '+currentProgreso+'% de tu objetivo. Enfócate en publicar más contenido y activar DMs.'});
+    }
+    if (totalWeeklyContenido < 3 && weeklyReports.length > 0) {
+        recommendations.push({type:'info', title:'Aumenta tu frecuencia de contenido', text:'Publicar mínimo 5 piezas por semana acelera significativamente los resultados.'});
+    }
+    if (totalWeeklyCalls > 0 && totalWeeklyClientes === 0) {
+        recommendations.push({type:'warning', title:'Revisa tu proceso de cierre', text:'Tienes calls pero no cierras. Revisa tu script y manejo de objeciones.'});
+    }
+    if (recommendations.length === 0) {
+        recommendations.push({type:'success', title:'Vas por buen camino', text:'Mantén la consistencia y sigue ejecutando el plan.'});
+    }
+    
+    var recsHtml = recommendations.map(function(r) {
+        return '<div class="rec '+r.type+'"><div class="rec-title">'+r.title+'</div><div class="rec-text">'+r.text+'</div></div>';
+    }).join('');
+    
+    // Weekly history HTML
+    var historyHtml = '';
+    if (weeklyReports.length === 0) {
+        historyHtml = '<div class="empty"><p>Aún no has enviado reportes semanales</p><button class="btn btn-success" onclick="openModal()">Enviar primer reporte</button></div>';
+    } else {
+        historyHtml = '<div class="week-row" style="font-weight:500;color:#666;font-size:11px;text-transform:uppercase;"><div class="week-date">Semana</div><div class="week-metric">Ingresos</div><div class="week-metric">Clientes</div><div class="week-metric">Calls</div><div class="week-metric">Leads</div><div class="week-metric">Contenido</div></div>';
+        weeklyReports.slice(-8).reverse().forEach(function(r, i) {
+            var d = new Date(r.date);
+            var dateStr = d.getDate() + '/' + (d.getMonth()+1);
+            historyHtml += '<div class="week-row"><div class="week-date">'+dateStr+'</div><div class="week-metric">€'+(r.ingresos||0)+'</div><div class="week-metric">'+(r.clientes||0)+'</div><div class="week-metric">'+(r.calls||0)+'</div><div class="week-metric">'+(r.leads||0)+'</div><div class="week-metric">'+(r.contenido||0)+'</div></div>';
+        });
+    }
     
     main.innerHTML = `
         <!-- DASHBOARD -->
         <div class="page active" id="page-dashboard">
             <div class="page-header">
-                <div><h1>${greeting}, ${firstName}</h1><p>Resumen de tu progreso</p></div>
+                <div><h1>${greeting}, ${firstName}</h1><p>Semana ${weeklyReports.length + 1} de tu programa</p></div>
                 <div class="header-btns">
-                    <button class="btn" onclick="alert('Próximamente: integración con Calendly')">Agendar Call</button>
-                    <button class="btn btn-primary" onclick="showPage('reportes')">Ver Reporte</button>
+                    <button class="btn btn-success" onclick="openModal()">📝 Reporte Semanal</button>
                 </div>
             </div>
+            
+            ${needsReport ? '<div class="alert"><div class="alert-text"><strong>⏰ Toca reporte semanal</strong> — Actualiza tus métricas para ver tu progreso real</div><button class="btn btn-success" onclick="openModal()">Enviar ahora</button></div>' : ''}
+            
             <div class="stats">
-                <div class="stat"><div class="stat-label">Ingresos</div><div class="stat-value">€${ingresos.toLocaleString()}</div><div class="stat-sub">Mensuales</div></div>
-                <div class="stat"><div class="stat-label">Clientes</div><div class="stat-value">${clientes}</div><div class="stat-sub">Activos</div></div>
-                <div class="stat"><div class="stat-label">Seguidores</div><div class="stat-value">${seguidores.toLocaleString()}</div><div class="stat-sub">@${data.instagram || 'instagram'}</div></div>
-                <div class="stat"><div class="stat-label">Objetivo</div><div class="stat-value">€${objetivo.toLocaleString()}</div><div class="stat-sub">${progreso}% completado</div></div>
+                <div class="stat">
+                    <div class="stat-label">Ingresos Acumulados</div>
+                    <div class="stat-value">€${currentIngresos.toLocaleString()}</div>
+                    <div class="stat-sub">de €${objetivo.toLocaleString()} objetivo</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Clientes Totales</div>
+                    <div class="stat-value">${currentClientes}</div>
+                    <div class="stat-change up">${totalWeeklyClientes > 0 ? '+'+totalWeeklyClientes+' nuevos' : 'desde inicio'}</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Calls Realizadas</div>
+                    <div class="stat-value">${totalWeeklyCalls}</div>
+                    <div class="stat-sub">total del programa</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Contenido Publicado</div>
+                    <div class="stat-value">${totalWeeklyContenido}</div>
+                    <div class="stat-sub">piezas totales</div>
+                </div>
             </div>
+            
             <div class="grid">
                 <div>
                     <div class="card">
-                        <div class="card-title">Progreso</div>
+                        <div class="card-title">Progreso al Objetivo<span>${currentProgreso}%</span></div>
                         <div class="progress-row">
-                            <div class="progress-header"><span>Objetivo de ingresos</span><span>€${ingresos.toLocaleString()} / €${objetivo.toLocaleString()}</span></div>
-                            <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(progreso,100)}%"></div></div>
+                            <div class="progress-header"><span>€${currentIngresos.toLocaleString()} / €${objetivo.toLocaleString()}</span><span>Meta 90 días</span></div>
+                            <div class="progress-bar"><div class="progress-fill green" style="width:${Math.min(currentProgreso,100)}%"></div></div>
                         </div>
-                        <div class="progress-row">
-                            <div class="progress-header"><span>Tareas completadas</span><span id="task-count">0 / 5</span></div>
-                            <div class="progress-bar"><div class="progress-fill" id="task-progress" style="width:0%"></div></div>
+                        <div style="margin-top:20px;padding-top:16px;border-top:1px solid #1a1a1a;">
+                            <div style="font-size:12px;color:#666;margin-bottom:8px;">Para alcanzar tu objetivo necesitas:</div>
+                            <div style="font-size:20px;font-weight:300;">€${Math.max(0, objetivo - currentIngresos).toLocaleString()}<span style="font-size:12px;color:#666;margin-left:8px;">restantes</span></div>
                         </div>
                     </div>
+                    
                     <div class="card">
-                        <div class="card-title">Tareas Esta Semana</div>
-                        <div id="tasks-mini"></div>
+                        <div class="card-title">Tareas Prioritarias</div>
+                        <div id="dashboard-tasks"></div>
                     </div>
                 </div>
+                
                 <div>
                     <div class="card">
-                        <div class="card-title">Contexto</div>
-                        <div class="info-block"><div class="info-label">Objetivo</div><div class="info-text">${data.objetivo_principal || 'No especificado'}</div></div>
-                        <div class="info-block"><div class="info-label">Problema</div><div class="info-text">${data.problema || 'No especificado'}</div></div>
-                        <div class="info-block"><div class="info-label">Negocio</div><div class="info-text">${data.negocio} — ${data.nicho}</div></div>
+                        <div class="card-title">Recomendaciones</div>
+                        ${recsHtml}
                     </div>
+                    
                     <div class="card">
-                        <div class="card-title">Resumen</div>
-                        <div class="summary">
-                            <div class="summary-item"><div class="summary-value">€${ticket.toLocaleString()}</div><div class="summary-label">Ticket</div></div>
-                            <div class="summary-item"><div class="summary-value">${data.tiempo || '—'}</div><div class="summary-label">Activo</div></div>
-                        </div>
+                        <div class="card-title">Tu Contexto</div>
+                        <div class="info-block"><div class="info-label">Objetivo Principal</div><div class="info-text">${data.objetivo_principal || 'No definido'}</div></div>
+                        <div class="info-block"><div class="info-label">Problema a Resolver</div><div class="info-text">${data.problema || 'No definido'}</div></div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- OBJETIVOS -->
-        <div class="page" id="page-objetivos">
-            <div class="page-header"><div><h1>Objetivos</h1><p>Tu plan a 90 días</p></div></div>
+        <!-- PROGRESO -->
+        <div class="page" id="page-progreso">
+            <div class="page-header"><div><h1>Mi Progreso</h1><p>Evolución semana a semana</p></div></div>
             <div class="card">
-                <div class="card-title">Objetivo Principal</div>
-                <div class="info-text" style="font-size:16px;line-height:1.6;padding:12px 0;">${data.objetivo_principal || 'No definido'}</div>
+                <div class="card-title">Historial de Reportes</div>
+                ${historyHtml}
             </div>
-            <div class="grid" style="margin-top:20px;">
+            <div class="grid grid-equal" style="margin-top:20px;">
                 <div class="card">
-                    <div class="card-title">Meta de Ingresos</div>
-                    <div style="text-align:center;padding:24px 0;">
-                        <div style="font-size:48px;font-weight:300;">€${objetivo.toLocaleString()}</div>
-                        <div style="color:#666;margin-top:8px;">en 90 días</div>
-                        <div class="progress-bar" style="margin-top:20px;"><div class="progress-fill" style="width:${progreso}%"></div></div>
-                        <div style="color:#666;font-size:12px;margin-top:8px;">${progreso}% completado (€${ingresos.toLocaleString()} actual)</div>
-                    </div>
+                    <div class="card-title">Resumen del Programa</div>
+                    <div class="info-block"><div class="info-label">Semanas completadas</div><div class="info-text" style="font-size:24px;">${weeklyReports.length}</div></div>
+                    <div class="info-block"><div class="info-label">Ingresos generados</div><div class="info-text" style="font-size:24px;">€${totalWeeklyIngresos.toLocaleString()}</div></div>
+                    <div class="info-block"><div class="info-label">Ratio cierre</div><div class="info-text" style="font-size:24px;">${totalWeeklyCalls > 0 ? Math.round(totalWeeklyClientes/totalWeeklyCalls*100) : 0}%</div></div>
                 </div>
                 <div class="card">
-                    <div class="card-title">Problema a Resolver</div>
-                    <div class="info-text" style="padding:12px 0;">${data.problema || 'No definido'}</div>
+                    <div class="card-title">Promedios Semanales</div>
+                    <div class="info-block"><div class="info-label">Ingresos/semana</div><div class="info-text" style="font-size:24px;">€${weeklyReports.length > 0 ? Math.round(totalWeeklyIngresos/weeklyReports.length).toLocaleString() : 0}</div></div>
+                    <div class="info-block"><div class="info-label">Contenido/semana</div><div class="info-text" style="font-size:24px;">${weeklyReports.length > 0 ? Math.round(totalWeeklyContenido/weeklyReports.length) : 0}</div></div>
+                    <div class="info-block"><div class="info-label">Leads/semana</div><div class="info-text" style="font-size:24px;">${weeklyReports.length > 0 ? Math.round(totalWeeklyLeads/weeklyReports.length) : 0}</div></div>
                 </div>
             </div>
         </div>
         
-        <!-- METRICAS -->
-        <div class="page" id="page-metricas">
-            <div class="page-header"><div><h1>Métricas</h1><p>Números de tu negocio</p></div></div>
-            <div class="stats">
-                <div class="stat"><div class="stat-label">Ingresos/mes</div><div class="stat-value">€${ingresos.toLocaleString()}</div></div>
-                <div class="stat"><div class="stat-label">Clientes</div><div class="stat-value">${clientes}</div></div>
-                <div class="stat"><div class="stat-label">Ticket Promedio</div><div class="stat-value">€${ticket.toLocaleString()}</div></div>
-                <div class="stat"><div class="stat-label">Tiempo Activo</div><div class="stat-value">${data.tiempo || '—'}</div></div>
+        <!-- ROADMAP -->
+        <div class="page" id="page-roadmap">
+            <div class="page-header"><div><h1>Tu Roadmap</h1><p>Plan de 90 días personalizado</p></div></div>
+            <div class="phase">
+                <div class="phase-header">
+                    <div class="phase-num ${weeklyReports.length >= 2 ? 'complete' : weeklyReports.length >= 0 ? 'current' : ''}">1</div>
+                    <div class="phase-info"><div class="phase-title">Fundamentos</div><div class="phase-desc">Oferta, perfil, posicionamiento</div></div>
+                    <div class="phase-status ${weeklyReports.length >= 2 ? 'complete' : 'current'}">${weeklyReports.length >= 2 ? 'Completado' : 'En progreso'}</div>
+                </div>
+            </div>
+            <div class="phase">
+                <div class="phase-header">
+                    <div class="phase-num ${weeklyReports.length >= 5 ? 'complete' : weeklyReports.length >= 2 ? 'current' : ''}">2</div>
+                    <div class="phase-info"><div class="phase-title">Contenido y Captación</div><div class="phase-desc">Reels, DMs, generación de leads</div></div>
+                    <div class="phase-status ${weeklyReports.length >= 5 ? 'complete' : weeklyReports.length >= 2 ? 'current' : 'pending'}">${weeklyReports.length >= 5 ? 'Completado' : weeklyReports.length >= 2 ? 'En progreso' : 'Pendiente'}</div>
+                </div>
+            </div>
+            <div class="phase">
+                <div class="phase-header">
+                    <div class="phase-num ${weeklyReports.length >= 9 ? 'complete' : weeklyReports.length >= 5 ? 'current' : ''}">3</div>
+                    <div class="phase-info"><div class="phase-title">Ventas y Cierre</div><div class="phase-desc">Calls, objeciones, conversión</div></div>
+                    <div class="phase-status ${weeklyReports.length >= 9 ? 'complete' : weeklyReports.length >= 5 ? 'current' : 'pending'}">${weeklyReports.length >= 9 ? 'Completado' : weeklyReports.length >= 5 ? 'En progreso' : 'Pendiente'}</div>
+                </div>
+            </div>
+            <div class="phase">
+                <div class="phase-header">
+                    <div class="phase-num ${weeklyReports.length >= 12 ? 'complete' : weeklyReports.length >= 9 ? 'current' : ''}">4</div>
+                    <div class="phase-info"><div class="phase-title">Escala</div><div class="phase-desc">Sistemas, delegación, crecimiento</div></div>
+                    <div class="phase-status ${weeklyReports.length >= 12 ? 'complete' : weeklyReports.length >= 9 ? 'current' : 'pending'}">${weeklyReports.length >= 12 ? 'Completado' : weeklyReports.length >= 9 ? 'En progreso' : 'Pendiente'}</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- REPORTE SEMANAL -->
+        <div class="page" id="page-reporte">
+            <div class="page-header"><div><h1>Reporte Semanal</h1><p>Actualiza tus métricas cada semana</p></div></div>
+            <div class="card">
+                <div class="card-title">Enviar Nuevo Reporte</div>
+                <p style="color:#888;font-size:13px;margin-bottom:20px;">Completa este formulario cada semana para trackear tu progreso real.</p>
+                <button class="btn btn-success" onclick="openModal()">📝 Completar Reporte Semanal</button>
             </div>
             <div class="card" style="margin-top:20px;">
-                <div class="card-title">Historial (próximamente)</div>
-                <div class="coming-soon" style="min-height:200px;border:none;">
-                    <p>Gráficos de evolución disponibles próximamente</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- REDES SOCIALES -->
-        <div class="page" id="page-redes">
-            <div class="page-header"><div><h1>Redes Sociales</h1><p>Tu presencia online</p></div></div>
-            <div class="social-grid">
-                <div class="social-card">
-                    <div class="social-platform">Instagram</div>
-                    <div class="social-stat">${seguidores.toLocaleString()}</div>
-                    <div class="social-label">seguidores</div>
-                    <div style="margin-top:12px;color:#666;font-size:12px;">@${data.instagram || 'no configurado'}</div>
-                </div>
-                <div class="social-card">
-                    <div class="social-platform">YouTube</div>
-                    <div class="social-stat">—</div>
-                    <div class="social-label">suscriptores</div>
-                    <div style="margin-top:12px;color:#666;font-size:12px;">No conectado</div>
-                </div>
-                <div class="social-card">
-                    <div class="social-platform">TikTok</div>
-                    <div class="social-stat">—</div>
-                    <div class="social-label">seguidores</div>
-                    <div style="margin-top:12px;color:#666;font-size:12px;">No conectado</div>
-                </div>
-                <div class="social-card">
-                    <div class="social-platform">Twitter/X</div>
-                    <div class="social-stat">—</div>
-                    <div class="social-label">seguidores</div>
-                    <div style="margin-top:12px;color:#666;font-size:12px;">No conectado</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- EMBUDO -->
-        <div class="page" id="page-embudo">
-            <div class="page-header"><div><h1>Embudo</h1><p>Tu proceso de ventas</p></div></div>
-            <div class="funnel-step">
-                <div class="funnel-num">1</div>
-                <div class="funnel-info"><div class="funnel-title">Contenido / Ads</div><div class="funnel-desc">Atraer audiencia con reels, videos, stories</div></div>
-                <div class="funnel-metric"><div class="funnel-value">${seguidores.toLocaleString()}</div><div class="funnel-label">alcance</div></div>
-            </div>
-            <div class="funnel-step">
-                <div class="funnel-num">2</div>
-                <div class="funnel-info"><div class="funnel-title">Perfil / Landing</div><div class="funnel-desc">Convertir visitantes en interesados</div></div>
-                <div class="funnel-metric"><div class="funnel-value">—</div><div class="funnel-label">visitas</div></div>
-            </div>
-            <div class="funnel-step">
-                <div class="funnel-num">3</div>
-                <div class="funnel-info"><div class="funnel-title">DMs / Leads</div><div class="funnel-desc">Conversaciones iniciadas</div></div>
-                <div class="funnel-metric"><div class="funnel-value">—</div><div class="funnel-label">leads</div></div>
-            </div>
-            <div class="funnel-step">
-                <div class="funnel-num">4</div>
-                <div class="funnel-info"><div class="funnel-title">Calls</div><div class="funnel-desc">Llamadas de venta agendadas</div></div>
-                <div class="funnel-metric"><div class="funnel-value">—</div><div class="funnel-label">calls</div></div>
-            </div>
-            <div class="funnel-step">
-                <div class="funnel-num">5</div>
-                <div class="funnel-info"><div class="funnel-title">Clientes</div><div class="funnel-desc">Ventas cerradas</div></div>
-                <div class="funnel-metric"><div class="funnel-value">${clientes}</div><div class="funnel-label">clientes</div></div>
+                <div class="card-title">Últimos Reportes</div>
+                ${historyHtml}
             </div>
         </div>
         
@@ -333,41 +473,77 @@ if (!data || !data.nombre) {
             </div>
         </div>
         
-        <!-- REPORTES -->
-        <div class="page" id="page-reportes">
-            <div class="page-header"><div><h1>Reportes</h1><p>Resumen de tu progreso</p></div></div>
-            <div class="card">
-                <div class="card-title">Resumen General</div>
-                <div class="grid" style="gap:16px;">
-                    <div>
-                        <div class="info-block"><div class="info-label">Cliente</div><div class="info-text">${data.nombre}</div></div>
-                        <div class="info-block"><div class="info-label">Negocio</div><div class="info-text">${data.negocio} (${data.nicho})</div></div>
-                        <div class="info-block"><div class="info-label">Producto</div><div class="info-text">${data.producto || '—'}</div></div>
-                    </div>
-                    <div>
-                        <div class="info-block"><div class="info-label">Ingresos Actuales</div><div class="info-text">€${ingresos.toLocaleString()}/mes</div></div>
-                        <div class="info-block"><div class="info-label">Objetivo 90 días</div><div class="info-text">€${objetivo.toLocaleString()}</div></div>
-                        <div class="info-block"><div class="info-label">Progreso</div><div class="info-text">${progreso}%</div></div>
-                    </div>
-                </div>
+        <!-- RECURSOS -->
+        <div class="page" id="page-recursos">
+            <div class="page-header"><div><h1>Clases y Guías</h1><p>Material del programa</p></div></div>
+            <div class="resource" onclick="alert('Próximamente disponible')">
+                <div class="resource-icon">📚</div>
+                <div class="resource-info"><div class="resource-title">Módulo 1: Construcción de Oferta</div><div class="resource-desc">Framework completo para crear tu oferta irresistible</div></div>
+                <div class="resource-tag">Disponible</div>
+            </div>
+            <div class="resource" onclick="alert('Próximamente disponible')">
+                <div class="resource-icon">📱</div>
+                <div class="resource-info"><div class="resource-title">Módulo 2: Perfil que Convierte</div><div class="resource-desc">Optimiza tu Instagram para atraer clientes</div></div>
+                <div class="resource-tag">Disponible</div>
+            </div>
+            <div class="resource" onclick="alert('Próximamente disponible')">
+                <div class="resource-icon">🎬</div>
+                <div class="resource-info"><div class="resource-title">Módulo 3: Contenido que Vende</div><div class="resource-desc">Sistema de creación de reels y videos</div></div>
+                <div class="resource-tag">Disponible</div>
+            </div>
+            <div class="resource" onclick="alert('Próximamente disponible')">
+                <div class="resource-icon">💬</div>
+                <div class="resource-info"><div class="resource-title">Módulo 4: Ventas por DM</div><div class="resource-desc">Scripts y frameworks de conversación</div></div>
+                <div class="resource-tag">Próximamente</div>
+            </div>
+            <div class="resource" onclick="alert('Próximamente disponible')">
+                <div class="resource-icon">📞</div>
+                <div class="resource-info"><div class="resource-title">Módulo 5: Calls de Cierre</div><div class="resource-desc">Estructura de llamada y manejo de objeciones</div></div>
+                <div class="resource-tag">Próximamente</div>
+            </div>
+        </div>
+        
+        <!-- HERRAMIENTAS -->
+        <div class="page" id="page-herramientas">
+            <div class="page-header"><div><h1>Herramientas</h1><p>Templates y recursos útiles</p></div></div>
+            <div class="resource" onclick="alert('Link próximamente')">
+                <div class="resource-icon">📝</div>
+                <div class="resource-info"><div class="resource-title">Template de Oferta</div><div class="resource-desc">Google Doc con estructura de oferta</div></div>
+            </div>
+            <div class="resource" onclick="alert('Link próximamente')">
+                <div class="resource-icon">💰</div>
+                <div class="resource-info"><div class="resource-title">Calculadora de Pricing</div><div class="resource-desc">Hoja de cálculo para definir precios</div></div>
+            </div>
+            <div class="resource" onclick="alert('Link próximamente')">
+                <div class="resource-icon">📊</div>
+                <div class="resource-info"><div class="resource-title">Tracker de Métricas</div><div class="resource-desc">Spreadsheet para seguimiento semanal</div></div>
+            </div>
+            <div class="resource" onclick="alert('Link próximamente')">
+                <div class="resource-icon">🎯</div>
+                <div class="resource-info"><div class="resource-title">Scripts de DM</div><div class="resource-desc">Mensajes probados para iniciar conversaciones</div></div>
+            </div>
+            <div class="resource" onclick="alert('Link próximamente')">
+                <div class="resource-icon">📅</div>
+                <div class="resource-info"><div class="resource-title">Calendario de Contenido</div><div class="resource-desc">Planificador semanal de publicaciones</div></div>
             </div>
         </div>
     `;
     
     // Tasks system
     var defaultTasks = [
-        {id:1, text:'Optimizar perfil de Instagram', priority:'Alta', done:false},
-        {id:2, text:'Grabar primer reel de la semana', priority:'Alta', done:false},
-        {id:3, text:'Revisar y ajustar oferta', priority:'Media', done:false},
-        {id:4, text:'Responder DMs pendientes', priority:'Alta', done:false},
-        {id:5, text:'Planificar contenido semanal', priority:'Media', done:false}
+        {id:1, text:'Publicar mínimo 5 piezas de contenido', priority:'urgent', done:false},
+        {id:2, text:'Responder todos los DMs en menos de 2h', priority:'urgent', done:false},
+        {id:3, text:'Hacer seguimiento a leads pendientes', priority:'high', done:false},
+        {id:4, text:'Revisar y optimizar bio de Instagram', priority:'medium', done:false},
+        {id:5, text:'Preparar contenido para próxima semana', priority:'medium', done:false},
+        {id:6, text:'Enviar reporte semanal', priority:'high', done:false}
     ];
     
     var tasks = defaultTasks;
     try { var saved = localStorage.getItem('gh_tasks'); if(saved) tasks = JSON.parse(saved); } catch(e){}
     
     function renderTasks() {
-        var miniHtml = '';
+        var dashHtml = '';
         var fullHtml = '';
         var done = 0;
         
@@ -375,15 +551,14 @@ if (!data || !data.nombre) {
             if(t.done) done++;
             var cls = t.done ? 'task done' : 'task';
             var check = t.done ? '✓' : '';
-            var html = '<div class="'+cls+'" onclick="toggleTask('+i+')"><div class="task-check">'+check+'</div><span class="task-text">'+t.text+'</span><span class="task-tag">'+t.priority+'</span></div>';
-            if(i < 3) miniHtml += html;
+            var tagCls = t.priority === 'urgent' ? 'task-tag urgent' : 'task-tag';
+            var html = '<div class="'+cls+'" onclick="toggleTask('+i+')"><div class="task-check">'+check+'</div><span class="task-text">'+t.text+'</span><span class="'+tagCls+'">'+t.priority+'</span></div>';
+            if(i < 4) dashHtml += html;
             fullHtml += html;
         });
         
-        document.getElementById('tasks-mini').innerHTML = miniHtml;
+        document.getElementById('dashboard-tasks').innerHTML = dashHtml;
         document.getElementById('tasks-full').innerHTML = fullHtml;
-        document.getElementById('task-count').textContent = done + ' / ' + tasks.length;
-        document.getElementById('task-progress').style.width = (done/tasks.length*100) + '%';
     }
     
     window.toggleTask = function(i) {
@@ -402,10 +577,46 @@ function showPage(page) {
     var el = document.getElementById('page-' + page);
     if(el) el.classList.add('active');
     
-    var navMap = {dashboard:0, objetivos:1, metricas:2, redes:3, embudo:4, tareas:5, reportes:6};
     var navItems = document.querySelectorAll('.nav-item');
+    var navMap = {dashboard:0, progreso:1, roadmap:2, reporte:3, tareas:4, recursos:5, herramientas:6};
     if(navItems[navMap[page]]) navItems[navMap[page]].classList.add('active');
 }
+
+function openModal() {
+    document.getElementById('reportModal').classList.add('active');
+}
+
+function closeModal() {
+    document.getElementById('reportModal').classList.remove('active');
+}
+
+document.getElementById('weeklyForm').onsubmit = function(e) {
+    e.preventDefault();
+    
+    var report = {
+        date: new Date().toISOString(),
+        ingresos: document.getElementById('rpt_ingresos').value || 0,
+        clientes: document.getElementById('rpt_clientes').value || 0,
+        calls: document.getElementById('rpt_calls').value || 0,
+        leads: document.getElementById('rpt_leads').value || 0,
+        contenido: document.getElementById('rpt_contenido').value || 0,
+        seguidores: document.getElementById('rpt_seguidores').value || 0,
+        wins: document.getElementById('rpt_wins').value,
+        problems: document.getElementById('rpt_problems').value
+    };
+    
+    weeklyReports.push(report);
+    localStorage.setItem('gh_weekly_reports', JSON.stringify(weeklyReports));
+    
+    closeModal();
+    alert('¡Reporte enviado! Recarga la página para ver tus métricas actualizadas.');
+    location.reload();
+};
+
+// Close modal on outside click
+document.getElementById('reportModal').onclick = function(e) {
+    if(e.target === this) closeModal();
+};
 </script>
 </body>
 </html>
