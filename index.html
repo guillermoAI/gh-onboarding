@@ -157,7 +157,8 @@
         }
         
         input.error, select.error, textarea.error {
-            border-color: #666;
+            border-color: #f00 !important;
+            background: rgba(255,0,0,0.05);
         }
         
         input::placeholder, textarea::placeholder {
@@ -219,6 +220,13 @@
             cursor: pointer;
             transition: all 0.2s;
             letter-spacing: 0.5px;
+            position: relative;
+            z-index: 10;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
         }
         
         .btn-primary {
@@ -400,7 +408,7 @@
                 </div>
                 
                 <div class="buttons">
-                    <button type="button" class="btn btn-primary" id="next1">Continuar</button>
+                    <button type="button" class="btn btn-primary" id="next1" onclick="handleNext(1)">Continuar</button>
                 </div>
             </div>
             
@@ -449,8 +457,8 @@
                 </div>
                 
                 <div class="buttons">
-                    <button type="button" class="btn btn-secondary" id="back2">Atrás</button>
-                    <button type="button" class="btn btn-primary" id="next2">Continuar</button>
+                    <button type="button" class="btn btn-secondary" id="back2" onclick="showStep(1)">Atrás</button>
+                    <button type="button" class="btn btn-primary" id="next2" onclick="handleNext(2)">Continuar</button>
                 </div>
             </div>
             
@@ -507,8 +515,8 @@
                 </div>
                 
                 <div class="buttons">
-                    <button type="button" class="btn btn-secondary" id="back3">Atrás</button>
-                    <button type="button" class="btn btn-primary" id="next3">Continuar</button>
+                    <button type="button" class="btn btn-secondary" id="back3" onclick="showStep(2)">Atrás</button>
+                    <button type="button" class="btn btn-primary" id="next3" onclick="handleNext(3)">Continuar</button>
                 </div>
             </div>
             
@@ -530,8 +538,8 @@
                 </div>
                 
                 <div class="buttons">
-                    <button type="button" class="btn btn-secondary" id="back4">Atrás</button>
-                    <button type="button" class="btn btn-primary" id="submit">Crear Dashboard</button>
+                    <button type="button" class="btn btn-secondary" id="back4" onclick="showStep(3)">Atrás</button>
+                    <button type="button" class="btn btn-primary" id="submit" onclick="submitForm()">Crear Dashboard</button>
                 </div>
             </div>
         </form>
@@ -559,63 +567,88 @@
     </div>
     
     <script>
-        console.log('GH Onboarding loaded');
-        let currentStep = 1;
+        // Variables globales
+        var currentStep = 1;
+        var form, header, progress, loading, success;
         
-        const form = document.getElementById('form');
-        const header = document.getElementById('header');
-        const progress = document.getElementById('progress');
-        const loading = document.getElementById('loading');
-        const success = document.getElementById('success');
+        // Inicializar al cargar
+        window.onload = function() {
+            form = document.getElementById('form');
+            header = document.getElementById('header');
+            progress = document.getElementById('progress');
+            loading = document.getElementById('loading');
+            success = document.getElementById('success');
+            
+            if (form) {
+                form.onsubmit = function(e) { e.preventDefault(); return false; };
+            }
+        };
         
         function updateProgress() {
-            document.querySelectorAll('.progress-dot').forEach((dot, i) => {
-                dot.classList.remove('active', 'done');
-                if (i + 1 < currentStep) dot.classList.add('done');
-                if (i + 1 === currentStep) dot.classList.add('active');
-            });
+            var dots = document.querySelectorAll('.progress-dot');
+            for (var i = 0; i < dots.length; i++) {
+                dots[i].classList.remove('active', 'done');
+                if (i + 1 < currentStep) dots[i].classList.add('done');
+                if (i + 1 === currentStep) dots[i].classList.add('active');
+            }
         }
         
         function showStep(n) {
-            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            var steps = document.querySelectorAll('.step');
+            for (var i = 0; i < steps.length; i++) {
+                steps[i].classList.remove('active');
+            }
             document.getElementById('step' + n).classList.add('active');
             currentStep = n;
             updateProgress();
             window.scrollTo(0, 0);
         }
         
+        function handleNext(step) {
+            if (validateStep(step)) {
+                showStep(step + 1);
+            }
+        }
+        
         function validateStep(n) {
-            let valid = true;
-            document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+            var valid = true;
+            var errors = document.querySelectorAll('.error');
+            for (var i = 0; i < errors.length; i++) {
+                errors[i].classList.remove('error');
+            }
             
             if (n === 1) {
-                ['nombre', 'email', 'whatsapp'].forEach(id => {
-                    const el = document.getElementById(id);
+                var fields = ['nombre', 'email', 'whatsapp'];
+                for (var i = 0; i < fields.length; i++) {
+                    var el = document.getElementById(fields[i]);
                     if (!el.value.trim()) { el.classList.add('error'); valid = false; }
-                });
+                }
             }
             
             if (n === 2) {
-                ['negocio', 'producto'].forEach(id => {
-                    const el = document.getElementById(id);
+                var fields = ['negocio', 'producto'];
+                for (var i = 0; i < fields.length; i++) {
+                    var el = document.getElementById(fields[i]);
                     if (!el.value.trim()) { el.classList.add('error'); valid = false; }
-                });
-                const nicho = document.getElementById('nicho');
+                }
+                var nicho = document.getElementById('nicho');
                 if (!nicho.value) { nicho.classList.add('error'); valid = false; }
             }
             
             if (n === 3) {
-                ['ingresos', 'objetivo'].forEach(id => {
-                    const el = document.getElementById(id);
+                var fields = ['ingresos', 'objetivo'];
+                for (var i = 0; i < fields.length; i++) {
+                    var el = document.getElementById(fields[i]);
                     if (!el.value) { el.classList.add('error'); valid = false; }
-                });
+                }
             }
             
             if (n === 4) {
-                ['objetivo_principal', 'problema'].forEach(id => {
-                    const el = document.getElementById(id);
+                var fields = ['objetivo_principal', 'problema'];
+                for (var i = 0; i < fields.length; i++) {
+                    var el = document.getElementById(fields[i]);
                     if (!el.value.trim()) { el.classList.add('error'); valid = false; }
-                });
+                }
             }
             
             return valid;
@@ -646,7 +679,7 @@
         function submitForm() {
             if (!validateStep(4)) return;
             
-            const data = collectData();
+            var data = collectData();
             
             try {
                 localStorage.setItem('gh_client_data', JSON.stringify(data));
@@ -655,15 +688,21 @@
                 return;
             }
             
+            form = document.getElementById('form');
+            progress = document.getElementById('progress');
+            loading = document.getElementById('loading');
+            header = document.getElementById('header');
+            success = document.getElementById('success');
+            
             form.style.display = 'none';
             progress.style.display = 'none';
             loading.classList.add('active');
             
-            let percent = 0;
-            const fill = document.getElementById('progressFill');
-            const text = document.getElementById('progressText');
+            var percent = 0;
+            var fill = document.getElementById('progressFill');
+            var text = document.getElementById('progressText');
             
-            const interval = setInterval(() => {
+            var interval = setInterval(function() {
                 percent += Math.random() * 12 + 3;
                 if (percent > 100) percent = 100;
                 
@@ -672,7 +711,7 @@
                 
                 if (percent >= 100) {
                     clearInterval(interval);
-                    setTimeout(() => {
+                    setTimeout(function() {
                         loading.classList.remove('active');
                         success.classList.add('active');
                         header.style.display = 'none';
@@ -680,29 +719,6 @@
                 }
             }, 80);
         }
-        
-        // Event listeners
-        console.log('Setting up event listeners');
-        
-        document.getElementById('next1').addEventListener('click', () => {
-            console.log('next1 clicked');
-            if (validateStep(1)) showStep(2);
-        });
-        
-        document.getElementById('back2').addEventListener('click', () => showStep(1));
-        document.getElementById('next2').addEventListener('click', () => {
-            if (validateStep(2)) showStep(3);
-        });
-        
-        document.getElementById('back3').addEventListener('click', () => showStep(2));
-        document.getElementById('next3').addEventListener('click', () => {
-            if (validateStep(3)) showStep(4);
-        });
-        
-        document.getElementById('back4').addEventListener('click', () => showStep(3));
-        document.getElementById('submit').addEventListener('click', submitForm);
-        
-        form.addEventListener('submit', e => e.preventDefault());
     </script>
 </body>
 </html>
