@@ -890,7 +890,7 @@
 
                 <div class="button-group">
                     <button type="button" class="btn btn-secondary" onclick="prevSection()">← Atrás</button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="button" class="btn btn-primary" onclick="submitForm()">
                         🚀 Construir Mi Dashboard
                     </button>
                 </div>
@@ -985,21 +985,20 @@
             }
         }
 
-        // Form submission
-        document.getElementById('onboardingForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
+        // Submit form function
+        function submitForm() {
             // Hide form, show loading
             document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
             document.querySelector('.progress-steps').style.display = 'none';
             document.getElementById('loadingScreen').classList.add('active');
 
             // Collect form data
-            const formData = new FormData(this);
+            const form = document.getElementById('onboardingForm');
+            const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
             
             // Handle checkboxes (multiple values)
-            const checkboxes = this.querySelectorAll('input[type="checkbox"]:checked');
+            const checkboxes = form.querySelectorAll('input[type="checkbox"]:checked');
             const cierreMetodos = [];
             checkboxes.forEach(cb => {
                 if (cb.name === 'cierre_metodo') {
@@ -1008,20 +1007,21 @@
             });
             data.cierre_metodo = cierreMetodos.join(', ');
 
-            // Simulate progress (in real app, this would poll backend)
+            console.log('Form data:', data);
+
+            // Simulate progress
             let progress = 0;
             const progressBar = document.getElementById('progressBar');
             const progressText = document.getElementById('progressText');
             const steps = document.querySelectorAll('.progress-step-item');
 
             const interval = setInterval(() => {
-                progress += Math.random() * 8 + 2; // Random increment
+                progress += Math.random() * 8 + 2;
                 if (progress > 100) progress = 100;
                 
                 progressBar.style.width = progress + '%';
                 progressText.textContent = Math.floor(progress) + '% completado';
 
-                // Update step items
                 steps.forEach(step => {
                     const stepProgress = parseInt(step.dataset.progress);
                     if (progress >= stepProgress) {
@@ -1038,17 +1038,18 @@
                         document.getElementById('loadingScreen').classList.remove('active');
                         document.getElementById('successScreen').classList.add('active');
                         
-                        // Set dashboard link (would come from backend)
                         const clientId = Date.now();
                         document.getElementById('dashboardLink').href = 
                             `dashboard.html?client=${clientId}`;
                     }, 500);
                 }
             }, 800);
+        }
 
-            // In production: Send data to backend
-            // await fetch('/api/onboarding', { method: 'POST', body: JSON.stringify(data) });
-            console.log('Form data:', data);
+        // Also handle form submit event as backup
+        document.getElementById('onboardingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitForm();
         });
 
         // Checkbox styling
