@@ -5,1063 +5,468 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Onboarding - GH Consulting</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #141414;
-            --bg-tertiary: #1a1a1a;
-            --border-color: #2a2a2a;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
+            --bg-primary: #09090b;
+            --bg-secondary: #18181b;
+            --bg-tertiary: #27272a;
+            --border: #3f3f46;
+            --text: #fafafa;
+            --text-muted: #a1a1aa;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
             --success: #22c55e;
-            --gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
         }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             background: var(--bg-primary);
-            color: var(--text-primary);
+            color: var(--text);
             min-height: 100vh;
-            line-height: 1.6;
         }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
+        .container { max-width: 720px; margin: 0 auto; padding: 48px 24px; }
+        
         /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 50px;
+        .header { text-align: center; margin-bottom: 48px; }
+        .logo { 
+            font-size: 14px; font-weight: 600; letter-spacing: 2px;
+            background: var(--gradient); -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; margin-bottom: 16px;
         }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header h1 {
-            font-size: 32px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            color: var(--text-secondary);
-            font-size: 16px;
-        }
-
-        /* Progress Steps */
-        .progress-steps {
-            display: flex;
+        .header h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
+        .header p { color: var(--text-muted); font-size: 16px; }
+        
+        /* Progress */
+        .progress-bar { 
+            display: flex; gap: 6px; margin-bottom: 48px; 
             justify-content: center;
-            gap: 8px;
-            margin-bottom: 40px;
         }
-
-        .step {
-            width: 40px;
-            height: 4px;
-            background: var(--border-color);
-            border-radius: 2px;
-            transition: background 0.3s;
+        .progress-step {
+            width: 48px; height: 4px; background: var(--bg-tertiary);
+            border-radius: 2px; transition: all 0.3s;
         }
-
-        .step.active {
-            background: var(--accent);
-        }
-
-        .step.completed {
-            background: var(--success);
-        }
-
-        /* Form Sections */
-        .form-section {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .form-section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .section-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-title .icon {
-            font-size: 24px;
-        }
-
-        .section-description {
-            color: var(--text-secondary);
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
-        /* Form Elements */
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        @media (max-width: 600px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        label {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-        }
-
-        label .required {
-            color: #ef4444;
-        }
-
-        label .optional {
-            color: var(--text-secondary);
-            font-weight: 400;
-            font-size: 12px;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 14px 16px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            color: var(--text-primary);
-            font-size: 15px;
-            font-family: inherit;
+        .progress-step.active { background: var(--accent); }
+        .progress-step.done { background: var(--success); }
+        
+        /* Form */
+        .form-section { display: none; animation: fadeIn 0.4s ease; }
+        .form-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .section-header { margin-bottom: 32px; }
+        .section-icon { font-size: 32px; margin-bottom: 12px; }
+        .section-title { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
+        .section-desc { color: var(--text-muted); font-size: 14px; }
+        
+        .form-grid { display: grid; gap: 20px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+        
+        .field { display: flex; flex-direction: column; gap: 8px; }
+        .field label { font-size: 14px; font-weight: 500; color: var(--text); }
+        .field label span { color: var(--accent); }
+        .field input, .field select, .field textarea {
+            padding: 14px 16px; background: var(--bg-secondary);
+            border: 1px solid var(--border); border-radius: 12px;
+            color: var(--text); font-size: 15px; font-family: inherit;
             transition: all 0.2s;
         }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        .field input:focus, .field select:focus, .field textarea:focus {
+            outline: none; border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
         }
-
-        input::placeholder, textarea::placeholder {
-            color: var(--text-secondary);
-        }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a0a0a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 18px;
-        }
-
-        /* Input with prefix */
-        .input-with-prefix {
-            display: flex;
-            align-items: stretch;
-        }
-
+        .field textarea { min-height: 100px; resize: vertical; }
+        .field input::placeholder, .field textarea::placeholder { color: var(--text-muted); }
+        
+        .input-group { display: flex; }
         .input-prefix {
-            padding: 14px 16px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-color);
-            border-right: none;
-            border-radius: 10px 0 0 10px;
-            color: var(--text-secondary);
-            font-size: 15px;
-            display: flex;
-            align-items: center;
+            padding: 14px 16px; background: var(--bg-tertiary);
+            border: 1px solid var(--border); border-right: none;
+            border-radius: 12px 0 0 12px; color: var(--text-muted);
         }
-
-        .input-with-prefix input {
-            border-radius: 0 10px 10px 0;
-        }
-
+        .input-group input { border-radius: 0 12px 12px 0; }
+        
         /* Buttons */
-        .button-group {
-            display: flex;
-            gap: 12px;
-            margin-top: 40px;
-        }
-
+        .buttons { display: flex; gap: 12px; margin-top: 40px; }
         .btn {
-            padding: 14px 28px;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-            font-family: inherit;
+            flex: 1; padding: 16px 24px; border-radius: 12px;
+            font-size: 15px; font-weight: 600; cursor: pointer;
+            border: none; font-family: inherit; transition: all 0.2s;
         }
-
         .btn-primary {
-            background: var(--gradient);
-            color: white;
-            flex: 1;
+            background: var(--gradient); color: white;
+            box-shadow: 0 4px 24px rgba(99,102,241,0.3);
         }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
-        }
-
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 32px rgba(99,102,241,0.4); }
         .btn-secondary {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
+            background: var(--bg-secondary); color: var(--text);
+            border: 1px solid var(--border);
         }
-
-        .btn-secondary:hover {
-            background: var(--bg-tertiary);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        /* Cards */
-        .card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-
-        .card-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 16px;
-        }
-
+        .btn-secondary:hover { background: var(--bg-tertiary); }
+        
         /* Loading Screen */
-        .loading-screen {
-            display: none;
-            text-align: center;
-            padding: 60px 20px;
+        .loading-screen, .success-screen { 
+            display: none; text-align: center; padding: 80px 24px;
         }
-
-        .loading-screen.active {
-            display: block;
+        .loading-screen.active, .success-screen.active { display: block; }
+        
+        .loader-icon {
+            width: 80px; height: 80px; margin: 0 auto 32px;
+            border-radius: 20px; background: var(--gradient);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 36px; animation: pulse 2s infinite;
         }
-
-        .loading-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 30px;
-            border-radius: 50%;
-            background: var(--gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-            animation: pulse 2s infinite;
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        
+        .loader-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+        .loader-subtitle { color: var(--text-muted); margin-bottom: 40px; }
+        
+        .progress-container {
+            max-width: 400px; margin: 0 auto 16px;
+            background: var(--bg-tertiary); border-radius: 8px;
+            height: 8px; overflow: hidden;
         }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .progress-fill {
+            height: 100%; background: var(--gradient);
+            border-radius: 8px; width: 0%; transition: width 0.3s;
         }
-
-        .loading-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 10px;
+        .progress-percent { color: var(--text-muted); font-size: 14px; }
+        
+        .steps-list { max-width: 360px; margin: 40px auto 0; text-align: left; }
+        .step-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 0; border-bottom: 1px solid var(--border);
+            color: var(--text-muted); font-size: 14px;
         }
-
-        .loading-subtitle {
-            color: var(--text-secondary);
-            margin-bottom: 40px;
+        .step-item.done { color: var(--success); }
+        .step-item.active { color: var(--text); }
+        .step-check {
+            width: 24px; height: 24px; border-radius: 50%;
+            border: 2px solid currentColor; display: flex;
+            align-items: center; justify-content: center; font-size: 12px;
         }
-
-        .progress-bar-container {
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            height: 12px;
-            overflow: hidden;
-            margin-bottom: 16px;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: var(--gradient);
-            border-radius: 10px;
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        .progress-text {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        .progress-steps-list {
-            max-width: 400px;
-            margin: 40px auto 0;
-            text-align: left;
-        }
-
-        .progress-step-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-secondary);
-        }
-
-        .progress-step-item.active {
-            color: var(--text-primary);
-        }
-
-        .progress-step-item.completed {
-            color: var(--success);
-        }
-
-        .progress-step-item .check {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 2px solid currentColor;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-
-        .progress-step-item.completed .check {
-            background: var(--success);
-            border-color: var(--success);
-        }
-
-        /* Success Screen */
-        .success-screen {
-            display: none;
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        .success-screen.active {
-            display: block;
-        }
-
+        .step-item.done .step-check { background: var(--success); border-color: var(--success); }
+        
+        /* Success */
         .success-icon {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 30px;
-            border-radius: 50%;
-            background: var(--success);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            animation: scaleIn 0.5s ease;
+            width: 100px; height: 100px; margin: 0 auto 32px;
+            border-radius: 50%; background: var(--success);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 48px; animation: scaleIn 0.5s ease;
         }
-
-        @keyframes scaleIn {
-            from { transform: scale(0); }
-            to { transform: scale(1); }
+        @keyframes scaleIn { from { transform: scale(0); } to { transform: scale(1); } }
+        .success-title { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+        .success-desc { color: var(--text-muted); margin-bottom: 32px; }
+        .dashboard-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 16px 32px; background: var(--gradient);
+            color: white; text-decoration: none; border-radius: 12px;
+            font-weight: 600; font-size: 16px; transition: all 0.2s;
         }
-
-        .success-title {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .success-subtitle {
-            color: var(--text-secondary);
-            margin-bottom: 30px;
-        }
-
-        .dashboard-link {
-            display: inline-block;
-            padding: 16px 32px;
-            background: var(--gradient);
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 16px;
-            transition: all 0.2s;
-        }
-
-        .dashboard-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
-        }
-
-        /* Tooltip */
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            margin-left: 6px;
-            cursor: help;
-        }
-
-        .tooltip-icon {
-            width: 16px;
-            height: 16px;
-            background: var(--bg-tertiary);
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            color: var(--text-secondary);
-        }
-
-        /* Checkbox/Radio */
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .checkbox-item:hover {
-            border-color: var(--accent);
-        }
-
-        .checkbox-item input {
-            width: auto;
-            accent-color: var(--accent);
-        }
-
-        .checkbox-item.selected {
-            border-color: var(--accent);
-            background: rgba(59, 130, 246, 0.1);
-        }
+        .dashboard-btn:hover { transform: translateY(-2px); }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="logo">GH CONSULTING</div>
-            <h1>Construye Tu Dashboard</h1>
-            <p>Completa el formulario y crearemos tu dashboard personalizado</p>
+            <h1>Configura tu Dashboard</h1>
+            <p>Completa el formulario y crearemos tu panel personalizado</p>
         </div>
-
-        <!-- Progress Steps -->
-        <div class="progress-steps">
-            <div class="step active" data-step="1"></div>
-            <div class="step" data-step="2"></div>
-            <div class="step" data-step="3"></div>
-            <div class="step" data-step="4"></div>
-            <div class="step" data-step="5"></div>
-            <div class="step" data-step="6"></div>
+        
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-step active"></div>
+            <div class="progress-step"></div>
+            <div class="progress-step"></div>
+            <div class="progress-step"></div>
         </div>
-
+        
         <form id="onboardingForm">
-            <!-- Section 1: Info Básica -->
-            <div class="form-section active" data-section="1">
-                <div class="section-title">
-                    <span class="icon">👤</span>
-                    Información Básica
+            <!-- Step 1: Info Personal -->
+            <div class="form-section active" data-step="1">
+                <div class="section-header">
+                    <div class="section-icon">👤</div>
+                    <div class="section-title">Información Personal</div>
+                    <div class="section-desc">Datos básicos para tu cuenta</div>
                 </div>
-                <p class="section-description">Empecemos con lo fundamental</p>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Nombre completo <span class="required">*</span></label>
-                        <input type="text" name="nombre" required placeholder="Tu nombre">
-                    </div>
-                    <div class="form-group">
-                        <label>Email <span class="required">*</span></label>
-                        <input type="email" name="email" required placeholder="tu@email.com">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>WhatsApp <span class="required">*</span></label>
-                        <input type="tel" name="whatsapp" required placeholder="+34 600 000 000">
-                    </div>
-                    <div class="form-group">
-                        <label>País/Ciudad</label>
-                        <input type="text" name="ubicacion" placeholder="Madrid, España">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Zona horaria</label>
-                    <select name="timezone">
-                        <option value="">Selecciona tu zona horaria</option>
-                        <option value="UTC-5">UTC-5 (Colombia, Perú, México)</option>
-                        <option value="UTC-4">UTC-4 (Venezuela, Chile)</option>
-                        <option value="UTC-3">UTC-3 (Argentina, Uruguay)</option>
-                        <option value="UTC+0">UTC+0 (UK, Portugal)</option>
-                        <option value="UTC+1">UTC+1 (España, Francia)</option>
-                        <option value="UTC+2">UTC+2 (Europa del Este)</option>
-                    </select>
-                </div>
-
-                <div class="button-group">
-                    <button type="button" class="btn btn-primary" onclick="nextSection()">
-                        Continuar →
-                    </button>
-                </div>
-            </div>
-
-            <!-- Section 2: Tu Negocio -->
-            <div class="form-section" data-section="2">
-                <div class="section-title">
-                    <span class="icon">💼</span>
-                    Tu Negocio
-                </div>
-                <p class="section-description">Cuéntanos sobre tu negocio actual</p>
-
-                <div class="form-group">
-                    <label>Nombre del negocio/marca <span class="required">*</span></label>
-                    <input type="text" name="negocio_nombre" required placeholder="Nombre de tu marca">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Nicho/Industria <span class="required">*</span></label>
-                        <select name="nicho" required>
-                            <option value="">Selecciona tu nicho</option>
-                            <option value="coaching">Coaching / Mentoring</option>
-                            <option value="consultoria">Consultoría de negocios</option>
-                            <option value="marketing">Marketing / Ads</option>
-                            <option value="fitness">Fitness / Salud</option>
-                            <option value="finanzas">Finanzas / Inversiones</option>
-                            <option value="tech">Tech / SaaS</option>
-                            <option value="ecommerce">E-commerce</option>
-                            <option value="educacion">Educación / Cursos</option>
-                            <option value="otro">Otro</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Tiempo con el negocio</label>
-                        <select name="tiempo_negocio">
-                            <option value="">Selecciona</option>
-                            <option value="<6m">Menos de 6 meses</option>
-                            <option value="6m-1y">6 meses - 1 año</option>
-                            <option value="1-2y">1-2 años</option>
-                            <option value="2-5y">2-5 años</option>
-                            <option value=">5y">Más de 5 años</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>¿Qué vendes exactamente? <span class="required">*</span></label>
-                    <textarea name="producto" required placeholder="Describe tu servicio o producto principal. Sé específico: ¿qué resultado ofreces? ¿a quién?"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Elevator pitch <span class="optional">(1 frase)</span></label>
-                    <input type="text" name="elevator_pitch" placeholder="Ayudo a [avatar] a conseguir [resultado] sin [problema]">
-                </div>
-
-                <div class="button-group">
-                    <button type="button" class="btn btn-secondary" onclick="prevSection()">← Atrás</button>
-                    <button type="button" class="btn btn-primary" onclick="nextSection()">Continuar →</button>
-                </div>
-            </div>
-
-            <!-- Section 3: Métricas -->
-            <div class="form-section" data-section="3">
-                <div class="section-title">
-                    <span class="icon">💰</span>
-                    Métricas Financieras
-                </div>
-                <p class="section-description">Necesitamos estos números para crear tu dashboard</p>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Ingresos mensuales actuales <span class="required">*</span></label>
-                        <div class="input-with-prefix">
-                            <span class="input-prefix">€</span>
-                            <input type="number" name="ingresos_actuales" required placeholder="0">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Objetivo en 90 días <span class="required">*</span></label>
-                        <div class="input-with-prefix">
-                            <span class="input-prefix">€</span>
-                            <input type="number" name="objetivo_90d" required placeholder="0">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Precio de tu oferta principal</label>
-                        <div class="input-with-prefix">
-                            <span class="input-prefix">€</span>
-                            <input type="number" name="ticket_principal" placeholder="0">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Clientes activos actualmente</label>
-                        <input type="number" name="clientes_activos" placeholder="0">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Clientes nuevos último mes</label>
-                        <input type="number" name="clientes_mes" placeholder="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Tasa de cierre aproximada</label>
-                        <div class="input-with-prefix">
-                            <input type="number" name="close_rate" placeholder="0" max="100">
-                            <span class="input-prefix">%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>¿Tienes otras ofertas? <span class="optional">(describe brevemente)</span></label>
-                    <textarea name="otras_ofertas" placeholder="Ej: Curso de €497, Membresía de €97/mes, Mentoring grupal de €2000..."></textarea>
-                </div>
-
-                <div class="button-group">
-                    <button type="button" class="btn btn-secondary" onclick="prevSection()">← Atrás</button>
-                    <button type="button" class="btn btn-primary" onclick="nextSection()">Continuar →</button>
-                </div>
-            </div>
-
-            <!-- Section 4: Redes Sociales -->
-            <div class="form-section" data-section="4">
-                <div class="section-title">
-                    <span class="icon">📱</span>
-                    Redes Sociales
-                </div>
-                <p class="section-description">Analizaremos tus perfiles para el research</p>
-
-                <div class="card">
-                    <div class="card-title">Instagram</div>
+                <div class="form-grid">
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Username</label>
-                            <div class="input-with-prefix">
-                                <span class="input-prefix">@</span>
-                                <input type="text" name="ig_username" placeholder="tu_usuario">
-                            </div>
+                        <div class="field">
+                            <label>Nombre completo <span>*</span></label>
+                            <input type="text" name="nombre" required placeholder="Tu nombre">
                         </div>
-                        <div class="form-group">
-                            <label>Seguidores</label>
-                            <input type="number" name="ig_followers" placeholder="0">
+                        <div class="field">
+                            <label>Email <span>*</span></label>
+                            <input type="email" name="email" required placeholder="tu@email.com">
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Frecuencia de publicación</label>
-                        <select name="ig_frecuencia">
-                            <option value="">Selecciona</option>
-                            <option value="diario">Diario</option>
-                            <option value="3-5/sem">3-5 veces/semana</option>
-                            <option value="1-2/sem">1-2 veces/semana</option>
-                            <option value="ocasional">Ocasional</option>
-                            <option value="nunca">No publico</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-title">YouTube</div>
-                    <div class="form-group">
-                        <label>URL del canal</label>
-                        <input type="url" name="yt_url" placeholder="https://youtube.com/@tucanal">
                     </div>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Suscriptores</label>
-                            <input type="number" name="yt_subs" placeholder="0">
+                        <div class="field">
+                            <label>WhatsApp <span>*</span></label>
+                            <input type="tel" name="whatsapp" required placeholder="+34 600 000 000">
                         </div>
-                        <div class="form-group">
-                            <label>Frecuencia</label>
-                            <select name="yt_frecuencia">
+                        <div class="field">
+                            <label>País</label>
+                            <input type="text" name="pais" placeholder="España">
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continuar →</button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Tu Negocio -->
+            <div class="form-section" data-step="2">
+                <div class="section-header">
+                    <div class="section-icon">💼</div>
+                    <div class="section-title">Tu Negocio</div>
+                    <div class="section-desc">Cuéntanos sobre tu empresa</div>
+                </div>
+                <div class="form-grid">
+                    <div class="field">
+                        <label>Nombre del negocio <span>*</span></label>
+                        <input type="text" name="negocio" required placeholder="Nombre de tu marca">
+                    </div>
+                    <div class="form-row">
+                        <div class="field">
+                            <label>Nicho <span>*</span></label>
+                            <select name="nicho" required>
                                 <option value="">Selecciona</option>
-                                <option value="2+/sem">2+ videos/semana</option>
-                                <option value="1/sem">1 video/semana</option>
-                                <option value="1-2/mes">1-2 videos/mes</option>
-                                <option value="ocasional">Ocasional</option>
-                                <option value="no">No tengo canal</option>
+                                <option value="coaching">Coaching</option>
+                                <option value="consultoria">Consultoría</option>
+                                <option value="marketing">Marketing/Ads</option>
+                                <option value="fitness">Fitness</option>
+                                <option value="finanzas">Finanzas</option>
+                                <option value="tech">Tech/SaaS</option>
+                                <option value="educacion">Educación</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Tiempo activo</label>
+                            <select name="tiempo">
+                                <option value="">Selecciona</option>
+                                <option value="<6m">< 6 meses</option>
+                                <option value="6m-1y">6 meses - 1 año</option>
+                                <option value="1-2y">1-2 años</option>
+                                <option value=">2y">+2 años</option>
                             </select>
                         </div>
                     </div>
+                    <div class="field">
+                        <label>¿Qué vendes? <span>*</span></label>
+                        <textarea name="producto" required placeholder="Describe tu servicio o producto principal"></textarea>
+                    </div>
                 </div>
-
-                <div class="card">
-                    <div class="card-title">Otras plataformas <span class="optional">(opcional)</span></div>
+                <div class="buttons">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">← Atrás</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continuar →</button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Métricas -->
+            <div class="form-section" data-step="3">
+                <div class="section-header">
+                    <div class="section-icon">💰</div>
+                    <div class="section-title">Métricas Actuales</div>
+                    <div class="section-desc">Números de tu negocio</div>
+                </div>
+                <div class="form-grid">
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>TikTok</label>
-                            <div class="input-with-prefix">
-                                <span class="input-prefix">@</span>
-                                <input type="text" name="tiktok" placeholder="usuario">
+                        <div class="field">
+                            <label>Ingresos mensuales <span>*</span></label>
+                            <div class="input-group">
+                                <span class="input-prefix">€</span>
+                                <input type="number" name="ingresos" required placeholder="0">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>LinkedIn</label>
-                            <input type="url" name="linkedin" placeholder="URL de perfil">
+                        <div class="field">
+                            <label>Objetivo 90 días <span>*</span></label>
+                            <div class="input-group">
+                                <span class="input-prefix">€</span>
+                                <input type="number" name="objetivo" required placeholder="0">
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>Newsletter / Email list</label>
-                        <input type="text" name="newsletter" placeholder="Plataforma + número de suscriptores">
+                    <div class="form-row">
+                        <div class="field">
+                            <label>Precio oferta principal</label>
+                            <div class="input-group">
+                                <span class="input-prefix">€</span>
+                                <input type="number" name="ticket" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Clientes activos</label>
+                            <input type="number" name="clientes" placeholder="0">
+                        </div>
                     </div>
-                </div>
-
-                <div class="button-group">
-                    <button type="button" class="btn btn-secondary" onclick="prevSection()">← Atrás</button>
-                    <button type="button" class="btn btn-primary" onclick="nextSection()">Continuar →</button>
-                </div>
-            </div>
-
-            <!-- Section 5: Embudo -->
-            <div class="form-section" data-section="5">
-                <div class="section-title">
-                    <span class="icon">🔄</span>
-                    Tu Embudo de Ventas
-                </div>
-                <p class="section-description">¿Cómo consigues y cierras clientes actualmente?</p>
-
-                <div class="form-group">
-                    <label>¿Cómo consigues clientes actualmente? <span class="required">*</span></label>
-                    <textarea name="proceso_captacion" required placeholder="Describe paso a paso cómo llegan leads y cómo los conviertes en clientes"></textarea>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Landing page / VSL</label>
-                        <input type="url" name="landing_url" placeholder="https://...">
-                    </div>
-                    <div class="form-group">
-                        <label>Calendario (Calendly, Cal, etc)</label>
-                        <input type="url" name="calendar_url" placeholder="https://calendly.com/...">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>¿Cómo cierras ventas?</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="cierre_metodo" value="dm"> DMs
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="cierre_metodo" value="call"> Calls
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="cierre_metodo" value="automatico"> Automático
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="cierre_metodo" value="presencial"> Presencial
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>¿Usas ads pagados?</label>
-                        <select name="usa_ads">
-                            <option value="">Selecciona</option>
-                            <option value="no">No</option>
-                            <option value="meta">Sí - Meta (FB/IG)</option>
-                            <option value="youtube">Sí - YouTube</option>
-                            <option value="tiktok">Sí - TikTok</option>
-                            <option value="google">Sí - Google</option>
-                            <option value="varios">Sí - Varios</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Presupuesto mensual en ads</label>
-                        <div class="input-with-prefix">
-                            <span class="input-prefix">€</span>
-                            <input type="number" name="ads_budget" placeholder="0">
+                    <div class="form-row">
+                        <div class="field">
+                            <label>Instagram @</label>
+                            <div class="input-group">
+                                <span class="input-prefix">@</span>
+                                <input type="text" name="instagram" placeholder="usuario">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Seguidores IG</label>
+                            <input type="number" name="seguidores" placeholder="0">
                         </div>
                     </div>
                 </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>¿Tienes setters/closers?</label>
-                        <select name="tiene_setters">
-                            <option value="">Selecciona</option>
-                            <option value="no">No, cierro yo todo</option>
-                            <option value="setter">Sí, tengo setter</option>
-                            <option value="closer">Sí, tengo closer</option>
-                            <option value="ambos">Sí, tengo setter y closer</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Leads/prospectos por semana</label>
-                        <input type="number" name="leads_semana" placeholder="0">
-                    </div>
-                </div>
-
-                <div class="button-group">
-                    <button type="button" class="btn btn-secondary" onclick="prevSection()">← Atrás</button>
-                    <button type="button" class="btn btn-primary" onclick="nextSection()">Continuar →</button>
+                <div class="buttons">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">← Atrás</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continuar →</button>
                 </div>
             </div>
-
-            <!-- Section 6: Objetivos -->
-            <div class="form-section" data-section="6">
-                <div class="section-title">
-                    <span class="icon">🎯</span>
-                    Objetivos y Situación
+            
+            <!-- Step 4: Objetivos -->
+            <div class="form-section" data-step="4">
+                <div class="section-header">
+                    <div class="section-icon">🎯</div>
+                    <div class="section-title">Objetivos</div>
+                    <div class="section-desc">¿Qué quieres lograr?</div>
                 </div>
-                <p class="section-description">Última sección - ¿qué quieres lograr?</p>
-
-                <div class="form-group">
-                    <label>¿Cuál es tu MAYOR objetivo trabajando conmigo? <span class="required">*</span></label>
-                    <textarea name="objetivo_principal" required placeholder="Sé específico. ¿Qué resultado quieres conseguir?"></textarea>
+                <div class="form-grid">
+                    <div class="field">
+                        <label>Tu mayor objetivo <span>*</span></label>
+                        <textarea name="objetivo_principal" required placeholder="¿Qué resultado específico quieres conseguir?"></textarea>
+                    </div>
+                    <div class="field">
+                        <label>Tu mayor problema <span>*</span></label>
+                        <textarea name="problema" required placeholder="¿Qué te está frenando ahora mismo?"></textarea>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label>¿Cuál es tu MAYOR problema/frustración ahora mismo? <span class="required">*</span></label>
-                    <textarea name="problema_principal" required placeholder="¿Qué te está frenando? ¿Dónde estás atascado?"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>¿Qué has intentado antes que NO funcionó?</label>
-                    <textarea name="intentos_previos" placeholder="¿Qué estrategias/métodos probaste? ¿Por qué crees que no funcionaron?"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>¿Algo más que deba saber?</label>
-                    <textarea name="notas_adicionales" placeholder="Cualquier contexto adicional que creas relevante"></textarea>
-                </div>
-
-                <div class="button-group">
-                    <button type="button" class="btn btn-secondary" onclick="prevSection()">← Atrás</button>
-                    <button type="button" class="btn btn-primary" onclick="submitForm()">
-                        🚀 Construir Mi Dashboard
-                    </button>
+                <div class="buttons">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">← Atrás</button>
+                    <button type="button" class="btn btn-primary" onclick="submitForm()">🚀 Crear Mi Dashboard</button>
                 </div>
             </div>
         </form>
-
-        <!-- Loading Screen -->
+        
+        <!-- Loading -->
         <div class="loading-screen" id="loadingScreen">
-            <div class="loading-icon">⚡</div>
-            <div class="loading-title">Construyendo tu Dashboard</div>
-            <div class="loading-subtitle">Esto tomará unos minutos...</div>
-            
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="progressBar"></div>
+            <div class="loader-icon">⚡</div>
+            <div class="loader-title">Creando tu Dashboard</div>
+            <div class="loader-subtitle">Esto tomará unos segundos...</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="progressFill"></div>
             </div>
-            <div class="progress-text" id="progressText">0% completado</div>
-
-            <div class="progress-steps-list">
-                <div class="progress-step-item" data-progress="0">
-                    <div class="check">✓</div>
-                    <span>Recibiendo información</span>
-                </div>
-                <div class="progress-step-item" data-progress="20">
-                    <div class="check">✓</div>
-                    <span>Analizando perfil de Instagram</span>
-                </div>
-                <div class="progress-step-item" data-progress="40">
-                    <div class="check">✓</div>
-                    <span>Analizando canal de YouTube</span>
-                </div>
-                <div class="progress-step-item" data-progress="60">
-                    <div class="check">✓</div>
-                    <span>Evaluando embudo de ventas</span>
-                </div>
-                <div class="progress-step-item" data-progress="80">
-                    <div class="check">✓</div>
-                    <span>Generando recomendaciones</span>
-                </div>
-                <div class="progress-step-item" data-progress="95">
-                    <div class="check">✓</div>
-                    <span>Creando dashboard personalizado</span>
-                </div>
+            <div class="progress-percent" id="progressPercent">0%</div>
+            <div class="steps-list">
+                <div class="step-item" data-at="0"><div class="step-check">✓</div>Guardando información</div>
+                <div class="step-item" data-at="25"><div class="step-check">✓</div>Configurando métricas</div>
+                <div class="step-item" data-at="50"><div class="step-check">✓</div>Generando insights</div>
+                <div class="step-item" data-at="75"><div class="step-check">✓</div>Creando dashboard</div>
             </div>
         </div>
-
-        <!-- Success Screen -->
+        
+        <!-- Success -->
         <div class="success-screen" id="successScreen">
             <div class="success-icon">✓</div>
             <div class="success-title">¡Dashboard Listo!</div>
-            <div class="success-subtitle">Tu dashboard personalizado ha sido creado</div>
-            <a href="#" class="dashboard-link" id="dashboardLink">
-                Acceder a Mi Dashboard →
+            <div class="success-desc">Tu panel personalizado ha sido creado</div>
+            <a href="dashboard.html" class="dashboard-btn" id="dashboardBtn">
+                Acceder al Dashboard →
             </a>
         </div>
     </div>
-
+    
     <script>
-        let currentSection = 1;
-        const totalSections = 6;
-
+        let step = 1;
+        const totalSteps = 4;
+        
         function updateProgress() {
-            document.querySelectorAll('.step').forEach((step, index) => {
-                const stepNum = index + 1;
-                step.classList.remove('active', 'completed');
-                if (stepNum < currentSection) {
-                    step.classList.add('completed');
-                } else if (stepNum === currentSection) {
-                    step.classList.add('active');
-                }
+            document.querySelectorAll('.progress-step').forEach((el, i) => {
+                el.classList.remove('active', 'done');
+                if (i + 1 < step) el.classList.add('done');
+                if (i + 1 === step) el.classList.add('active');
             });
         }
-
-        function showSection(num) {
-            document.querySelectorAll('.form-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.querySelector(`[data-section="${num}"]`).classList.add('active');
-            currentSection = num;
-            updateProgress();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function nextSection() {
-            if (currentSection < totalSections) {
-                showSection(currentSection + 1);
-            }
-        }
-
-        function prevSection() {
-            if (currentSection > 1) {
-                showSection(currentSection - 1);
-            }
-        }
-
-        // Submit form function
-        function submitForm() {
-            // Hide form, show loading
+        
+        function showStep(n) {
             document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
-            document.querySelector('.progress-steps').style.display = 'none';
-            document.getElementById('loadingScreen').classList.add('active');
-
-            // Collect form data
-            const form = document.getElementById('onboardingForm');
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
-            
-            // Handle checkboxes (multiple values)
-            const checkboxes = form.querySelectorAll('input[type="checkbox"]:checked');
-            const cierreMetodos = [];
-            checkboxes.forEach(cb => {
-                if (cb.name === 'cierre_metodo') {
-                    cierreMetodos.push(cb.value);
+            document.querySelector(`[data-step="${n}"]`).classList.add('active');
+            step = n;
+            updateProgress();
+        }
+        
+        function nextStep() {
+            // Basic validation
+            const currentSection = document.querySelector(`[data-step="${step}"]`);
+            const requiredFields = currentSection.querySelectorAll('[required]');
+            let valid = true;
+            requiredFields.forEach(f => {
+                if (!f.value.trim()) {
+                    f.style.borderColor = '#ef4444';
+                    valid = false;
+                } else {
+                    f.style.borderColor = '';
                 }
             });
-            data.cierre_metodo = cierreMetodos.join(', ');
-
-            console.log('Form data:', data);
-
-            // Simulate progress
+            if (!valid) return;
+            if (step < totalSteps) showStep(step + 1);
+        }
+        
+        function prevStep() { if (step > 1) showStep(step - 1); }
+        
+        function submitForm() {
+            // Collect all data
+            const form = document.getElementById('onboardingForm');
+            const data = Object.fromEntries(new FormData(form).entries());
+            
+            // Validate last step
+            if (!data.objetivo_principal || !data.problema) {
+                alert('Por favor completa los campos requeridos');
+                return;
+            }
+            
+            // Save to localStorage
+            data.createdAt = new Date().toISOString();
+            data.id = Date.now();
+            localStorage.setItem('gh_client_data', JSON.stringify(data));
+            
+            // Show loading
+            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('progressBar').style.display = 'none';
+            document.getElementById('loadingScreen').classList.add('active');
+            
+            // Animate progress
             let progress = 0;
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const steps = document.querySelectorAll('.progress-step-item');
-
+            const fill = document.getElementById('progressFill');
+            const percent = document.getElementById('progressPercent');
+            const steps = document.querySelectorAll('.step-item');
+            
             const interval = setInterval(() => {
-                progress += Math.random() * 8 + 2;
+                progress += Math.random() * 12 + 3;
                 if (progress > 100) progress = 100;
                 
-                progressBar.style.width = progress + '%';
-                progressText.textContent = Math.floor(progress) + '% completado';
-
-                steps.forEach(step => {
-                    const stepProgress = parseInt(step.dataset.progress);
-                    if (progress >= stepProgress) {
-                        step.classList.add('completed');
-                    }
-                    if (progress >= stepProgress && progress < stepProgress + 20) {
-                        step.classList.add('active');
-                    }
+                fill.style.width = progress + '%';
+                percent.textContent = Math.floor(progress) + '%';
+                
+                steps.forEach(s => {
+                    const at = parseInt(s.dataset.at);
+                    if (progress >= at) s.classList.add('done');
+                    if (progress >= at && progress < at + 25) s.classList.add('active');
                 });
-
+                
                 if (progress >= 100) {
                     clearInterval(interval);
                     setTimeout(() => {
                         document.getElementById('loadingScreen').classList.remove('active');
                         document.getElementById('successScreen').classList.add('active');
-                        
-                        const clientId = Date.now();
-                        document.getElementById('dashboardLink').href = 
-                            `dashboard.html?client=${clientId}`;
-                    }, 500);
+                        // Confetti!
+                        if (typeof confetti !== 'undefined') {
+                            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                        }
+                    }, 400);
                 }
-            }, 800);
+            }, 120);
         }
-
-        // Also handle form submit event as backup
-        document.getElementById('onboardingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            submitForm();
-        });
-
-        // Checkbox styling
-        document.querySelectorAll('.checkbox-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                if (e.target.type !== 'checkbox') {
-                    const checkbox = this.querySelector('input[type="checkbox"]');
-                    checkbox.checked = !checkbox.checked;
-                }
-                this.classList.toggle('selected', this.querySelector('input').checked);
-            });
-        });
     </script>
 </body>
 </html>
