@@ -4,486 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - GH Consulting</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        :root {
-            --bg: #000;
-            --bg-card: #0a0a0a;
-            --bg-hover: #111;
-            --border: #1a1a1a;
-            --text: #fff;
-            --text-muted: #666;
-            --text-dim: #888;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
-        
-        /* Layout */
-        .app {
-            display: flex;
-            min-height: 100vh;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #000; color: #fff; min-height: 100vh; }
+        .app { display: flex; min-height: 100vh; }
         
         /* Sidebar */
-        .sidebar {
-            width: 220px;
-            background: var(--bg);
-            border-right: 1px solid var(--border);
-            padding: 32px 20px;
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            height: 100vh;
-        }
-        
-        .logo {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-            margin-bottom: 48px;
-        }
-        
-        .nav-section {
-            margin-bottom: 32px;
-        }
-        
-        .nav-label {
-            font-size: 10px;
-            font-weight: 500;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 16px;
-        }
-        
-        .nav-item {
-            display: block;
-            padding: 12px 0;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 400;
-            transition: color 0.2s;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .nav-item:hover {
-            color: var(--text);
-        }
-        
-        .nav-item.active {
-            color: var(--text);
-        }
-        
-        .sidebar-footer {
-            margin-top: auto;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 500;
-            font-size: 12px;
-            letter-spacing: 1px;
-        }
-        
-        .user-name {
-            font-size: 13px;
-            font-weight: 500;
-        }
-        
-        .user-email {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
+        .sidebar { width: 200px; background: #000; border-right: 1px solid #1a1a1a; padding: 24px 16px; position: fixed; height: 100vh; display: flex; flex-direction: column; }
+        .logo { font-size: 10px; font-weight: 600; letter-spacing: 2px; color: #666; margin-bottom: 40px; }
+        .nav-label { font-size: 10px; font-weight: 500; color: #444; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 12px; }
+        .nav-item { display: block; padding: 10px 12px; color: #666; text-decoration: none; font-size: 13px; cursor: pointer; transition: all 0.15s; border-radius: 4px; margin-bottom: 2px; }
+        .nav-item:hover { color: #fff; background: #111; }
+        .nav-item.active { color: #fff; background: #111; }
+        .sidebar-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid #1a1a1a; }
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .user-avatar { width: 32px; height: 32px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; }
+        .user-name { font-size: 12px; font-weight: 500; }
+        .user-email { font-size: 10px; color: #666; }
         
         /* Main */
-        .main {
-            flex: 1;
-            margin-left: 220px;
-            padding: 48px;
-        }
+        .main { flex: 1; margin-left: 200px; padding: 32px; }
         
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 48px;
-            padding-bottom: 32px;
-            border-bottom: 1px solid var(--border);
-        }
+        /* Page Header */
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid #1a1a1a; }
+        .page-header h1 { font-size: 20px; font-weight: 400; }
+        .page-header p { color: #666; font-size: 13px; margin-top: 4px; }
+        .btn { padding: 10px 16px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid #333; background: transparent; color: #fff; font-family: inherit; transition: all 0.15s; }
+        .btn:hover { border-color: #666; }
+        .btn-primary { background: #fff; color: #000; border-color: #fff; }
+        .btn-primary:hover { background: #eee; }
+        .header-btns { display: flex; gap: 8px; }
         
-        .header h1 {
-            font-size: 24px;
-            font-weight: 300;
-            letter-spacing: -0.5px;
-        }
-        
-        .header p {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-top: 8px;
-        }
-        
-        .header-actions {
-            display: flex;
-            gap: 12px;
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 12px 20px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text);
-            font-family: inherit;
-            transition: all 0.2s;
-        }
-        
-        .btn:hover {
-            border-color: var(--text-muted);
-        }
-        
-        .btn-primary {
-            background: var(--text);
-            color: var(--bg);
-            border-color: var(--text);
-        }
-        
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
-        
-        /* Stats */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1px;
-            background: var(--border);
-            margin-bottom: 48px;
-        }
-        
-        .stat-card {
-            background: var(--bg);
-            padding: 28px;
-        }
-        
-        .stat-label {
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-        }
-        
-        .stat-value {
-            font-size: 32px;
-            font-weight: 300;
-            letter-spacing: -1px;
-        }
-        
-        .stat-sub {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 8px;
-        }
-        
-        /* Content Grid */
-        .content {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 48px;
-        }
+        /* Stats Grid */
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #1a1a1a; margin-bottom: 32px; }
+        .stat { background: #000; padding: 20px; }
+        .stat-label { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .stat-value { font-size: 28px; font-weight: 300; }
+        .stat-sub { font-size: 11px; color: #666; margin-top: 4px; }
         
         /* Cards */
-        .card {
-            border: 1px solid var(--border);
-            padding: 28px;
-            margin-bottom: 24px;
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .card-title {
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--text-dim);
-        }
-        
-        .card-meta {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
+        .grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; }
+        .card { border: 1px solid #1a1a1a; padding: 20px; margin-bottom: 20px; }
+        .card-title { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #1a1a1a; }
         
         /* Progress */
-        .progress-item {
-            margin-bottom: 24px;
-        }
-        
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-        
-        .progress-label {
-            font-size: 14px;
-        }
-        
-        .progress-value {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-        
-        .progress-bar {
-            height: 2px;
-            background: var(--border);
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: var(--text);
-            transition: width 0.3s;
-        }
+        .progress-row { margin-bottom: 16px; }
+        .progress-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
+        .progress-header span:last-child { color: #666; }
+        .progress-bar { height: 3px; background: #1a1a1a; }
+        .progress-fill { height: 100%; background: #fff; }
         
         /* Tasks */
-        .task {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
+        .task { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #1a1a1a; cursor: pointer; }
+        .task:last-child { border-bottom: none; }
+        .task-check { width: 16px; height: 16px; border: 1px solid #444; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+        .task.done .task-check { background: #fff; color: #000; }
+        .task-text { flex: 1; font-size: 13px; }
+        .task.done .task-text { text-decoration: line-through; color: #666; }
+        .task-tag { font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 6px; border: 1px solid #333; }
         
-        .task:last-child {
-            border-bottom: none;
-        }
-        
-        .task:hover {
-            opacity: 0.8;
-        }
-        
-        .task-check {
-            width: 18px;
-            height: 18px;
-            border: 1px solid var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        
-        .task-check svg {
-            width: 10px;
-            height: 10px;
-            stroke: var(--bg);
-            stroke-width: 3;
-            fill: none;
-            opacity: 0;
-        }
-        
-        .task.done .task-check {
-            background: var(--text);
-            border-color: var(--text);
-        }
-        
-        .task.done .task-check svg {
-            opacity: 1;
-        }
-        
-        .task-text {
-            flex: 1;
-            font-size: 14px;
-        }
-        
-        .task.done .task-text {
-            text-decoration: line-through;
-            color: var(--text-muted);
-        }
-        
-        .task-priority {
-            font-size: 10px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            padding: 4px 8px;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-        }
-        
-        /* Insights */
-        .insight {
-            padding: 20px;
-            border: 1px solid var(--border);
-            margin-bottom: 16px;
-        }
-        
-        .insight-label {
-            font-size: 10px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-        }
-        
-        .insight-text {
-            font-size: 14px;
-            line-height: 1.6;
-            color: var(--text-dim);
-        }
+        /* Info blocks */
+        .info-block { padding: 16px; border: 1px solid #1a1a1a; margin-bottom: 12px; }
+        .info-label { font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .info-text { font-size: 13px; color: #888; line-height: 1.5; }
         
         /* Summary */
-        .summary-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1px;
-            background: var(--border);
-        }
+        .summary { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #1a1a1a; }
+        .summary-item { background: #000; padding: 16px; text-align: center; }
+        .summary-value { font-size: 20px; font-weight: 300; }
+        .summary-label { font-size: 10px; color: #666; margin-top: 4px; }
         
-        .summary-item {
-            background: var(--bg);
-            padding: 20px;
-            text-align: center;
-        }
+        /* Page sections - hide all except active */
+        .page { display: none; }
+        .page.active { display: block; }
         
-        .summary-value {
-            font-size: 24px;
-            font-weight: 300;
-            margin-bottom: 4px;
-        }
+        /* Coming soon */
+        .coming-soon { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; text-align: center; border: 1px solid #1a1a1a; }
+        .coming-soon h2 { font-size: 18px; font-weight: 400; margin-bottom: 8px; }
+        .coming-soon p { color: #666; font-size: 13px; }
         
-        .summary-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        /* Social metrics */
+        .social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .social-card { border: 1px solid #1a1a1a; padding: 20px; }
+        .social-platform { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+        .social-stat { font-size: 24px; font-weight: 300; margin-bottom: 4px; }
+        .social-label { font-size: 11px; color: #666; }
         
-        /* Empty State */
-        .empty {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 60vh;
-            text-align: center;
-        }
+        /* Funnel */
+        .funnel-step { display: flex; align-items: center; gap: 16px; padding: 16px; border: 1px solid #1a1a1a; margin-bottom: 8px; }
+        .funnel-num { width: 32px; height: 32px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; }
+        .funnel-info { flex: 1; }
+        .funnel-title { font-size: 14px; margin-bottom: 4px; }
+        .funnel-desc { font-size: 12px; color: #666; }
+        .funnel-metric { text-align: right; }
+        .funnel-value { font-size: 18px; font-weight: 300; }
+        .funnel-label { font-size: 10px; color: #666; }
         
-        .empty-icon {
-            width: 64px;
-            height: 64px;
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 24px;
-        }
+        /* Empty state */
+        .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; text-align: center; }
+        .empty h2 { font-size: 18px; font-weight: 400; margin-bottom: 8px; }
+        .empty p { color: #666; font-size: 13px; margin-bottom: 24px; }
+        .empty a { padding: 12px 24px; background: #fff; color: #000; text-decoration: none; font-size: 13px; font-weight: 500; }
         
-        .empty-icon svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--text-muted);
-            fill: none;
-        }
-        
-        .empty h2 {
-            font-size: 18px;
-            font-weight: 400;
-            margin-bottom: 8px;
-        }
-        
-        .empty p {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 32px;
-        }
-        
-        .empty a {
-            display: inline-block;
-            padding: 14px 28px;
-            background: var(--text);
-            color: var(--bg);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        /* Responsive */
-        @media (max-width: 1024px) {
+        @media (max-width: 900px) {
             .stats { grid-template-columns: repeat(2, 1fr); }
-            .content { grid-template-columns: 1fr; }
+            .grid { grid-template-columns: 1fr; }
         }
-        
-        @media (max-width: 768px) {
+        @media (max-width: 600px) {
             .sidebar { display: none; }
-            .main { margin-left: 0; padding: 24px; }
+            .main { margin-left: 0; }
             .stats { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="app">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">GH CONSULTING</div>
-            
-            <nav>
-                <div class="nav-section">
-                    <div class="nav-label">Principal</div>
-                    <a href="#" class="nav-item active">Dashboard</a>
-                    <a href="#" class="nav-item">Objetivos</a>
-                    <a href="#" class="nav-item">Métricas</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-label">Contenido</div>
-                    <a href="#" class="nav-item">Redes Sociales</a>
-                    <a href="#" class="nav-item">Embudo</a>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-label">Gestión</div>
-                    <a href="#" class="nav-item">Tareas</a>
-                    <a href="#" class="nav-item">Reportes</a>
-                </div>
-            </nav>
-            
+            <div class="nav-label">Principal</div>
+            <div class="nav-item active" onclick="showPage('dashboard')">Dashboard</div>
+            <div class="nav-item" onclick="showPage('objetivos')">Objetivos</div>
+            <div class="nav-item" onclick="showPage('metricas')">Métricas</div>
+            <div class="nav-label">Contenido</div>
+            <div class="nav-item" onclick="showPage('redes')">Redes Sociales</div>
+            <div class="nav-item" onclick="showPage('embudo')">Embudo</div>
+            <div class="nav-label">Gestión</div>
+            <div class="nav-item" onclick="showPage('tareas')">Tareas</div>
+            <div class="nav-item" onclick="showPage('reportes')">Reportes</div>
             <div class="sidebar-footer">
                 <div class="user-info">
                     <div class="user-avatar" id="avatar">--</div>
@@ -495,170 +142,270 @@
             </div>
         </aside>
         
-        <!-- Main -->
-        <main class="main" id="main">
-        </main>
+        <main class="main" id="main"></main>
     </div>
+
+<script>
+var data = null;
+try { var s = localStorage.getItem('gh_client_data'); if (s) data = JSON.parse(s); } catch(e) {}
+
+var main = document.getElementById('main');
+
+if (!data || !data.nombre) {
+    main.innerHTML = '<div class="empty"><h2>Sin datos</h2><p>Completa el onboarding primero</p><a href="index.html">Ir al Onboarding</a></div>';
+} else {
+    var hour = new Date().getHours();
+    var greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
+    var firstName = data.nombre.split(' ')[0];
+    var initials = data.nombre.split(' ').map(function(n){return n[0]}).join('').toUpperCase().slice(0,2);
     
-    <script>
-        let data = null;
-        try {
-            const stored = localStorage.getItem('gh_client_data');
-            if (stored) data = JSON.parse(stored);
-        } catch (e) {}
+    var ingresos = parseInt(data.ingresos) || 0;
+    var objetivo = parseInt(data.objetivo) || 0;
+    var clientes = parseInt(data.clientes) || 0;
+    var seguidores = parseInt(data.seguidores) || 0;
+    var ticket = parseInt(data.ticket) || 0;
+    var progreso = objetivo > 0 ? Math.round((ingresos / objetivo) * 100) : 0;
+    
+    document.getElementById('avatar').textContent = initials;
+    document.getElementById('userName').textContent = data.nombre;
+    document.getElementById('userEmail').textContent = data.email;
+    
+    main.innerHTML = `
+        <!-- DASHBOARD -->
+        <div class="page active" id="page-dashboard">
+            <div class="page-header">
+                <div><h1>${greeting}, ${firstName}</h1><p>Resumen de tu progreso</p></div>
+                <div class="header-btns">
+                    <button class="btn" onclick="alert('Próximamente: integración con Calendly')">Agendar Call</button>
+                    <button class="btn btn-primary" onclick="showPage('reportes')">Ver Reporte</button>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat"><div class="stat-label">Ingresos</div><div class="stat-value">€${ingresos.toLocaleString()}</div><div class="stat-sub">Mensuales</div></div>
+                <div class="stat"><div class="stat-label">Clientes</div><div class="stat-value">${clientes}</div><div class="stat-sub">Activos</div></div>
+                <div class="stat"><div class="stat-label">Seguidores</div><div class="stat-value">${seguidores.toLocaleString()}</div><div class="stat-sub">@${data.instagram || 'instagram'}</div></div>
+                <div class="stat"><div class="stat-label">Objetivo</div><div class="stat-value">€${objetivo.toLocaleString()}</div><div class="stat-sub">${progreso}% completado</div></div>
+            </div>
+            <div class="grid">
+                <div>
+                    <div class="card">
+                        <div class="card-title">Progreso</div>
+                        <div class="progress-row">
+                            <div class="progress-header"><span>Objetivo de ingresos</span><span>€${ingresos.toLocaleString()} / €${objetivo.toLocaleString()}</span></div>
+                            <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(progreso,100)}%"></div></div>
+                        </div>
+                        <div class="progress-row">
+                            <div class="progress-header"><span>Tareas completadas</span><span id="task-count">0 / 5</span></div>
+                            <div class="progress-bar"><div class="progress-fill" id="task-progress" style="width:0%"></div></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Tareas Esta Semana</div>
+                        <div id="tasks-mini"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card">
+                        <div class="card-title">Contexto</div>
+                        <div class="info-block"><div class="info-label">Objetivo</div><div class="info-text">${data.objetivo_principal || 'No especificado'}</div></div>
+                        <div class="info-block"><div class="info-label">Problema</div><div class="info-text">${data.problema || 'No especificado'}</div></div>
+                        <div class="info-block"><div class="info-label">Negocio</div><div class="info-text">${data.negocio} — ${data.nicho}</div></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Resumen</div>
+                        <div class="summary">
+                            <div class="summary-item"><div class="summary-value">€${ticket.toLocaleString()}</div><div class="summary-label">Ticket</div></div>
+                            <div class="summary-item"><div class="summary-value">${data.tiempo || '—'}</div><div class="summary-label">Activo</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
-        const main = document.getElementById('main');
+        <!-- OBJETIVOS -->
+        <div class="page" id="page-objetivos">
+            <div class="page-header"><div><h1>Objetivos</h1><p>Tu plan a 90 días</p></div></div>
+            <div class="card">
+                <div class="card-title">Objetivo Principal</div>
+                <div class="info-text" style="font-size:16px;line-height:1.6;padding:12px 0;">${data.objetivo_principal || 'No definido'}</div>
+            </div>
+            <div class="grid" style="margin-top:20px;">
+                <div class="card">
+                    <div class="card-title">Meta de Ingresos</div>
+                    <div style="text-align:center;padding:24px 0;">
+                        <div style="font-size:48px;font-weight:300;">€${objetivo.toLocaleString()}</div>
+                        <div style="color:#666;margin-top:8px;">en 90 días</div>
+                        <div class="progress-bar" style="margin-top:20px;"><div class="progress-fill" style="width:${progreso}%"></div></div>
+                        <div style="color:#666;font-size:12px;margin-top:8px;">${progreso}% completado (€${ingresos.toLocaleString()} actual)</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Problema a Resolver</div>
+                    <div class="info-text" style="padding:12px 0;">${data.problema || 'No definido'}</div>
+                </div>
+            </div>
+        </div>
         
-        if (!data || !data.nombre) {
-            main.innerHTML = `
-                <div class="empty">
-                    <div class="empty-icon">
-                        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                    </div>
-                    <h2>Sin datos de cliente</h2>
-                    <p>Completa el onboarding para ver tu dashboard</p>
-                    <a href="index.html">Ir al Onboarding</a>
+        <!-- METRICAS -->
+        <div class="page" id="page-metricas">
+            <div class="page-header"><div><h1>Métricas</h1><p>Números de tu negocio</p></div></div>
+            <div class="stats">
+                <div class="stat"><div class="stat-label">Ingresos/mes</div><div class="stat-value">€${ingresos.toLocaleString()}</div></div>
+                <div class="stat"><div class="stat-label">Clientes</div><div class="stat-value">${clientes}</div></div>
+                <div class="stat"><div class="stat-label">Ticket Promedio</div><div class="stat-value">€${ticket.toLocaleString()}</div></div>
+                <div class="stat"><div class="stat-label">Tiempo Activo</div><div class="stat-value">${data.tiempo || '—'}</div></div>
+            </div>
+            <div class="card" style="margin-top:20px;">
+                <div class="card-title">Historial (próximamente)</div>
+                <div class="coming-soon" style="min-height:200px;border:none;">
+                    <p>Gráficos de evolución disponibles próximamente</p>
                 </div>
-            `;
-        } else {
-            const hour = new Date().getHours();
-            const greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
-            const firstName = data.nombre.split(' ')[0];
-            const initials = data.nombre.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-            
-            const ingresos = parseInt(data.ingresos) || 0;
-            const objetivo = parseInt(data.objetivo) || 0;
-            const clientes = parseInt(data.clientes) || 0;
-            const seguidores = parseInt(data.seguidores) || 0;
-            const ticket = parseInt(data.ticket) || 0;
-            const progreso = objetivo > 0 ? Math.round((ingresos / objetivo) * 100) : 0;
-            
-            document.getElementById('avatar').textContent = initials;
-            document.getElementById('userName').textContent = data.nombre;
-            document.getElementById('userEmail').textContent = data.email;
-            
-            main.innerHTML = `
-                <div class="header">
+            </div>
+        </div>
+        
+        <!-- REDES SOCIALES -->
+        <div class="page" id="page-redes">
+            <div class="page-header"><div><h1>Redes Sociales</h1><p>Tu presencia online</p></div></div>
+            <div class="social-grid">
+                <div class="social-card">
+                    <div class="social-platform">Instagram</div>
+                    <div class="social-stat">${seguidores.toLocaleString()}</div>
+                    <div class="social-label">seguidores</div>
+                    <div style="margin-top:12px;color:#666;font-size:12px;">@${data.instagram || 'no configurado'}</div>
+                </div>
+                <div class="social-card">
+                    <div class="social-platform">YouTube</div>
+                    <div class="social-stat">—</div>
+                    <div class="social-label">suscriptores</div>
+                    <div style="margin-top:12px;color:#666;font-size:12px;">No conectado</div>
+                </div>
+                <div class="social-card">
+                    <div class="social-platform">TikTok</div>
+                    <div class="social-stat">—</div>
+                    <div class="social-label">seguidores</div>
+                    <div style="margin-top:12px;color:#666;font-size:12px;">No conectado</div>
+                </div>
+                <div class="social-card">
+                    <div class="social-platform">Twitter/X</div>
+                    <div class="social-stat">—</div>
+                    <div class="social-label">seguidores</div>
+                    <div style="margin-top:12px;color:#666;font-size:12px;">No conectado</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- EMBUDO -->
+        <div class="page" id="page-embudo">
+            <div class="page-header"><div><h1>Embudo</h1><p>Tu proceso de ventas</p></div></div>
+            <div class="funnel-step">
+                <div class="funnel-num">1</div>
+                <div class="funnel-info"><div class="funnel-title">Contenido / Ads</div><div class="funnel-desc">Atraer audiencia con reels, videos, stories</div></div>
+                <div class="funnel-metric"><div class="funnel-value">${seguidores.toLocaleString()}</div><div class="funnel-label">alcance</div></div>
+            </div>
+            <div class="funnel-step">
+                <div class="funnel-num">2</div>
+                <div class="funnel-info"><div class="funnel-title">Perfil / Landing</div><div class="funnel-desc">Convertir visitantes en interesados</div></div>
+                <div class="funnel-metric"><div class="funnel-value">—</div><div class="funnel-label">visitas</div></div>
+            </div>
+            <div class="funnel-step">
+                <div class="funnel-num">3</div>
+                <div class="funnel-info"><div class="funnel-title">DMs / Leads</div><div class="funnel-desc">Conversaciones iniciadas</div></div>
+                <div class="funnel-metric"><div class="funnel-value">—</div><div class="funnel-label">leads</div></div>
+            </div>
+            <div class="funnel-step">
+                <div class="funnel-num">4</div>
+                <div class="funnel-info"><div class="funnel-title">Calls</div><div class="funnel-desc">Llamadas de venta agendadas</div></div>
+                <div class="funnel-metric"><div class="funnel-value">—</div><div class="funnel-label">calls</div></div>
+            </div>
+            <div class="funnel-step">
+                <div class="funnel-num">5</div>
+                <div class="funnel-info"><div class="funnel-title">Clientes</div><div class="funnel-desc">Ventas cerradas</div></div>
+                <div class="funnel-metric"><div class="funnel-value">${clientes}</div><div class="funnel-label">clientes</div></div>
+            </div>
+        </div>
+        
+        <!-- TAREAS -->
+        <div class="page" id="page-tareas">
+            <div class="page-header"><div><h1>Tareas</h1><p>Tu checklist semanal</p></div></div>
+            <div class="card">
+                <div class="card-title">Esta Semana</div>
+                <div id="tasks-full"></div>
+            </div>
+        </div>
+        
+        <!-- REPORTES -->
+        <div class="page" id="page-reportes">
+            <div class="page-header"><div><h1>Reportes</h1><p>Resumen de tu progreso</p></div></div>
+            <div class="card">
+                <div class="card-title">Resumen General</div>
+                <div class="grid" style="gap:16px;">
                     <div>
-                        <h1>${greeting}, ${firstName}</h1>
-                        <p>Resumen de tu progreso</p>
+                        <div class="info-block"><div class="info-label">Cliente</div><div class="info-text">${data.nombre}</div></div>
+                        <div class="info-block"><div class="info-label">Negocio</div><div class="info-text">${data.negocio} (${data.nicho})</div></div>
+                        <div class="info-block"><div class="info-label">Producto</div><div class="info-text">${data.producto || '—'}</div></div>
                     </div>
-                    <div class="header-actions">
-                        <button class="btn">Agendar Call</button>
-                        <button class="btn btn-primary">Ver Reporte</button>
-                    </div>
-                </div>
-                
-                <div class="stats">
-                    <div class="stat-card">
-                        <div class="stat-label">Ingresos</div>
-                        <div class="stat-value">€${ingresos.toLocaleString()}</div>
-                        <div class="stat-sub">Mensuales actuales</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Clientes</div>
-                        <div class="stat-value">${clientes}</div>
-                        <div class="stat-sub">Activos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Seguidores</div>
-                        <div class="stat-value">${seguidores.toLocaleString()}</div>
-                        <div class="stat-sub">${data.instagram ? '@' + data.instagram : 'Instagram'}</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Objetivo</div>
-                        <div class="stat-value">€${objetivo.toLocaleString()}</div>
-                        <div class="stat-sub">${progreso}% completado</div>
-                    </div>
-                </div>
-                
-                <div class="content">
                     <div>
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">Progreso</div>
-                                <span class="card-meta">Semana 1</span>
-                            </div>
-                            <div class="progress-item">
-                                <div class="progress-header">
-                                    <span class="progress-label">Objetivo de ingresos</span>
-                                    <span class="progress-value">€${ingresos.toLocaleString()} / €${objetivo.toLocaleString()}</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: ${Math.min(progreso, 100)}%"></div>
-                                </div>
-                            </div>
-                            <div class="progress-item">
-                                <div class="progress-header">
-                                    <span class="progress-label">Tareas completadas</span>
-                                    <span class="progress-value">0 / 5</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%"></div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">Tareas</div>
-                            </div>
-                            <div class="task" onclick="this.classList.toggle('done')">
-                                <div class="task-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-                                <span class="task-text">Optimizar perfil de Instagram</span>
-                                <span class="task-priority">Alta</span>
-                            </div>
-                            <div class="task" onclick="this.classList.toggle('done')">
-                                <div class="task-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-                                <span class="task-text">Grabar primer reel de la semana</span>
-                                <span class="task-priority">Alta</span>
-                            </div>
-                            <div class="task" onclick="this.classList.toggle('done')">
-                                <div class="task-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-                                <span class="task-text">Revisar y ajustar oferta</span>
-                                <span class="task-priority">Media</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">Contexto</div>
-                            </div>
-                            <div class="insight">
-                                <div class="insight-label">Objetivo</div>
-                                <div class="insight-text">${data.objetivo_principal || 'No especificado'}</div>
-                            </div>
-                            <div class="insight">
-                                <div class="insight-label">Problema</div>
-                                <div class="insight-text">${data.problema || 'No especificado'}</div>
-                            </div>
-                            <div class="insight">
-                                <div class="insight-label">Negocio</div>
-                                <div class="insight-text">${data.negocio} — ${data.nicho}</div>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">Resumen</div>
-                            </div>
-                            <div class="summary-grid">
-                                <div class="summary-item">
-                                    <div class="summary-value">€${ticket.toLocaleString()}</div>
-                                    <div class="summary-label">Ticket</div>
-                                </div>
-                                <div class="summary-item">
-                                    <div class="summary-value">${data.tiempo || '—'}</div>
-                                    <div class="summary-label">Activo</div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="info-block"><div class="info-label">Ingresos Actuales</div><div class="info-text">€${ingresos.toLocaleString()}/mes</div></div>
+                        <div class="info-block"><div class="info-label">Objetivo 90 días</div><div class="info-text">€${objetivo.toLocaleString()}</div></div>
+                        <div class="info-block"><div class="info-label">Progreso</div><div class="info-text">${progreso}%</div></div>
                     </div>
                 </div>
-            `;
-        }
-    </script>
+            </div>
+        </div>
+    `;
+    
+    // Tasks system
+    var defaultTasks = [
+        {id:1, text:'Optimizar perfil de Instagram', priority:'Alta', done:false},
+        {id:2, text:'Grabar primer reel de la semana', priority:'Alta', done:false},
+        {id:3, text:'Revisar y ajustar oferta', priority:'Media', done:false},
+        {id:4, text:'Responder DMs pendientes', priority:'Alta', done:false},
+        {id:5, text:'Planificar contenido semanal', priority:'Media', done:false}
+    ];
+    
+    var tasks = defaultTasks;
+    try { var saved = localStorage.getItem('gh_tasks'); if(saved) tasks = JSON.parse(saved); } catch(e){}
+    
+    function renderTasks() {
+        var miniHtml = '';
+        var fullHtml = '';
+        var done = 0;
+        
+        tasks.forEach(function(t, i) {
+            if(t.done) done++;
+            var cls = t.done ? 'task done' : 'task';
+            var check = t.done ? '✓' : '';
+            var html = '<div class="'+cls+'" onclick="toggleTask('+i+')"><div class="task-check">'+check+'</div><span class="task-text">'+t.text+'</span><span class="task-tag">'+t.priority+'</span></div>';
+            if(i < 3) miniHtml += html;
+            fullHtml += html;
+        });
+        
+        document.getElementById('tasks-mini').innerHTML = miniHtml;
+        document.getElementById('tasks-full').innerHTML = fullHtml;
+        document.getElementById('task-count').textContent = done + ' / ' + tasks.length;
+        document.getElementById('task-progress').style.width = (done/tasks.length*100) + '%';
+    }
+    
+    window.toggleTask = function(i) {
+        tasks[i].done = !tasks[i].done;
+        localStorage.setItem('gh_tasks', JSON.stringify(tasks));
+        renderTasks();
+    };
+    
+    renderTasks();
+}
+
+function showPage(page) {
+    document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+    document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
+    
+    var el = document.getElementById('page-' + page);
+    if(el) el.classList.add('active');
+    
+    var navMap = {dashboard:0, objetivos:1, metricas:2, redes:3, embudo:4, tareas:5, reportes:6};
+    var navItems = document.querySelectorAll('.nav-item');
+    if(navItems[navMap[page]]) navItems[navMap[page]].classList.add('active');
+}
+</script>
 </body>
 </html>
