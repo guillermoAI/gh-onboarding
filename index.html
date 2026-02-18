@@ -4,721 +4,252 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Onboarding - GH Consulting</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        :root {
-            --bg: #000;
-            --bg-card: #0a0a0a;
-            --bg-input: #111;
-            --border: #222;
-            --border-focus: #444;
-            --text: #fff;
-            --text-muted: #666;
-            --text-dim: #888;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 60px 24px;
-        }
-        
-        .container {
-            max-width: 520px;
-            margin: 0 auto;
-        }
-        
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-        
-        .logo {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 3px;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-        }
-        
-        .header h1 {
-            font-size: 28px;
-            font-weight: 300;
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
-        }
-        
-        .header p {
-            color: var(--text-muted);
-            font-size: 14px;
-            font-weight: 400;
-        }
-        
-        /* Progress */
-        .progress {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-bottom: 56px;
-        }
-        
-        .progress-dot {
-            width: 32px;
-            height: 2px;
-            background: var(--border);
-            transition: background 0.3s;
-        }
-        
-        .progress-dot.active {
-            background: var(--text);
-        }
-        
-        .progress-dot.done {
-            background: var(--text-muted);
-        }
-        
-        /* Steps */
-        .step {
-            display: none;
-        }
-        
-        .step.active {
-            display: block;
-            animation: fadeIn 0.4s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .step-header {
-            margin-bottom: 40px;
-            text-align: center;
-        }
-        
-        .step-number {
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-        }
-        
-        .step-title {
-            font-size: 20px;
-            font-weight: 400;
-        }
-        
-        /* Form */
-        .form-group {
-            margin-bottom: 24px;
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-        
-        @media (max-width: 500px) {
-            .form-row { grid-template-columns: 1fr; }
-        }
-        
-        label {
-            display: block;
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            color: var(--text-dim);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-        
-        input, select, textarea {
-            width: 100%;
-            padding: 16px;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            color: var(--text);
-            font-size: 15px;
-            font-family: inherit;
-            transition: border-color 0.2s;
-        }
-        
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--border-focus);
-        }
-        
-        input.error, select.error, textarea.error {
-            border-color: #f00 !important;
-            background: rgba(255,0,0,0.05);
-        }
-        
-        input::placeholder, textarea::placeholder {
-            color: var(--text-muted);
-        }
-        
-        select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-        }
-        
-        select option {
-            background: #111;
-            color: #fff;
-        }
-        
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-            line-height: 1.5;
-        }
-        
-        .input-prefix {
-            display: flex;
-        }
-        
-        .prefix {
-            padding: 16px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-right: none;
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-        
-        .input-prefix input {
-            flex: 1;
-        }
-        
-        /* Buttons */
-        .buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 48px;
-        }
-        
-        .btn {
-            flex: 1;
-            padding: 16px 24px;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text);
-            font-size: 14px;
-            font-weight: 500;
-            font-family: inherit;
-            cursor: pointer;
-            transition: all 0.2s;
-            letter-spacing: 0.5px;
-            position: relative;
-            z-index: 10;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        .btn:active {
-            transform: scale(0.98);
-        }
-        
-        .btn-primary {
-            background: var(--text);
-            color: var(--bg);
-            border-color: var(--text);
-        }
-        
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
-        
-        .btn-secondary:hover {
-            border-color: var(--text-muted);
-        }
-        
-        /* Loading */
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 80px 20px;
-        }
-        
-        .loading.active {
-            display: block;
-        }
-        
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 2px solid var(--border);
-            border-top-color: var(--text);
-            border-radius: 50%;
-            margin: 0 auto 32px;
-            animation: spin 0.8s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .loading h2 {
-            font-size: 18px;
-            font-weight: 400;
-            margin-bottom: 8px;
-        }
-        
-        .loading p {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 40px;
-        }
-        
-        .progress-bar {
-            max-width: 280px;
-            margin: 0 auto 16px;
-            height: 2px;
-            background: var(--border);
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: var(--text);
-            width: 0%;
-            transition: width 0.2s;
-        }
-        
-        .progress-text {
-            color: var(--text-muted);
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 1px;
-        }
-        
-        /* Success */
-        .success {
-            display: none;
-            text-align: center;
-            padding: 80px 20px;
-        }
-        
-        .success.active {
-            display: block;
-            animation: fadeIn 0.4s ease;
-        }
-        
-        .success-check {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 32px;
-            border: 2px solid var(--text);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .success-check svg {
-            width: 28px;
-            height: 28px;
-            stroke: var(--text);
-            stroke-width: 2;
-            fill: none;
-        }
-        
-        .success h2 {
-            font-size: 24px;
-            font-weight: 300;
-            margin-bottom: 8px;
-        }
-        
-        .success p {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 40px;
-        }
-        
-        .dashboard-link {
-            display: inline-block;
-            padding: 16px 40px;
-            background: var(--text);
-            color: var(--bg);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            transition: opacity 0.2s;
-        }
-        
-        .dashboard-link:hover {
-            opacity: 0.9;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #000; color: #fff; min-height: 100vh; padding: 40px 20px; }
+        .container { max-width: 500px; margin: 0 auto; }
+        .logo { font-size: 10px; font-weight: 600; letter-spacing: 2px; color: #666; text-align: center; margin-bottom: 20px; }
+        h1 { font-size: 24px; font-weight: 300; text-align: center; margin-bottom: 8px; }
+        .subtitle { color: #666; font-size: 14px; text-align: center; margin-bottom: 40px; }
+        .progress { display: flex; gap: 8px; justify-content: center; margin-bottom: 40px; }
+        .dot { width: 30px; height: 3px; background: #222; }
+        .dot.active { background: #fff; }
+        .dot.done { background: #666; }
+        .step { display: none; }
+        .step.active { display: block; }
+        .step-title { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 8px; }
+        .step-name { font-size: 18px; text-align: center; margin-bottom: 30px; }
+        .field { margin-bottom: 20px; }
+        .field label { display: block; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .field input, .field select, .field textarea { width: 100%; padding: 14px; background: #111; border: 1px solid #222; color: #fff; font-size: 15px; font-family: inherit; }
+        .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: #444; }
+        .field input.error, .field select.error, .field textarea.error { border-color: #f44; }
+        .field textarea { min-height: 90px; resize: vertical; }
+        .field select { cursor: pointer; }
+        .row { display: flex; gap: 15px; }
+        .row .field { flex: 1; }
+        .prefix-wrap { display: flex; }
+        .prefix-wrap span { padding: 14px; background: #0a0a0a; border: 1px solid #222; border-right: none; color: #666; }
+        .prefix-wrap input { flex: 1; }
+        .buttons { display: flex; gap: 10px; margin-top: 35px; }
+        .btn { flex: 1; padding: 14px 20px; border: 1px solid #333; background: transparent; color: #fff; font-size: 14px; font-weight: 500; cursor: pointer; }
+        .btn:hover { border-color: #555; }
+        .btn-primary { background: #fff; color: #000; border-color: #fff; }
+        .btn-primary:hover { background: #eee; }
+        .loading, .success { display: none; text-align: center; padding: 60px 20px; }
+        .loading.active, .success.active { display: block; }
+        .spinner { width: 40px; height: 40px; border: 2px solid #222; border-top-color: #fff; border-radius: 50%; margin: 0 auto 20px; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading h2, .success h2 { font-size: 18px; font-weight: 400; margin-bottom: 8px; }
+        .loading p, .success p { color: #666; font-size: 14px; }
+        .bar { max-width: 250px; height: 3px; background: #222; margin: 30px auto 10px; }
+        .bar-fill { height: 100%; width: 0; background: #fff; transition: width 0.1s; }
+        .pct { color: #666; font-size: 12px; }
+        .check { width: 50px; height: 50px; border: 2px solid #fff; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .success a { display: inline-block; margin-top: 30px; padding: 14px 30px; background: #fff; color: #000; text-decoration: none; font-weight: 500; }
+        @media (max-width: 500px) { .row { flex-direction: column; gap: 0; } }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header" id="header">
+        <div id="header">
             <div class="logo">GH CONSULTING</div>
             <h1>Configura tu Dashboard</h1>
-            <p>Completa el formulario para crear tu panel</p>
+            <p class="subtitle">Completa el formulario</p>
         </div>
         
         <div class="progress" id="progress">
-            <div class="progress-dot active" data-step="1"></div>
-            <div class="progress-dot" data-step="2"></div>
-            <div class="progress-dot" data-step="3"></div>
-            <div class="progress-dot" data-step="4"></div>
+            <div class="dot active" id="d1"></div>
+            <div class="dot" id="d2"></div>
+            <div class="dot" id="d3"></div>
+            <div class="dot" id="d4"></div>
         </div>
         
-        <form id="form">
-            <!-- Step 1 -->
-            <div class="step active" id="step1">
-                <div class="step-header">
-                    <div class="step-number">PASO 1 DE 4</div>
-                    <div class="step-title">Información Personal</div>
+        <form id="form" onsubmit="return false;">
+            <div class="step active" id="s1">
+                <div class="step-title">Paso 1 de 4</div>
+                <div class="step-name">Información Personal</div>
+                <div class="row">
+                    <div class="field"><label>Nombre</label><input type="text" id="nombre" placeholder="Tu nombre"></div>
+                    <div class="field"><label>Email</label><input type="email" id="email" placeholder="tu@email.com"></div>
                 </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Nombre completo</label>
-                        <input type="text" id="nombre" placeholder="Tu nombre">
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" id="email" placeholder="tu@email.com">
-                    </div>
+                <div class="row">
+                    <div class="field"><label>WhatsApp</label><input type="tel" id="whatsapp" placeholder="+34 600 000 000"></div>
+                    <div class="field"><label>País</label><input type="text" id="pais" placeholder="España"></div>
                 </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>WhatsApp</label>
-                        <input type="tel" id="whatsapp" placeholder="+34 600 000 000">
-                    </div>
-                    <div class="form-group">
-                        <label>País</label>
-                        <input type="text" id="pais" placeholder="España">
-                    </div>
-                </div>
-                
                 <div class="buttons">
-                    <button type="button" class="btn btn-primary" id="next1" onclick="handleNext(1)">Continuar</button>
+                    <button type="button" class="btn btn-primary" onclick="next(1)">Continuar</button>
                 </div>
             </div>
             
-            <!-- Step 2 -->
-            <div class="step" id="step2">
-                <div class="step-header">
-                    <div class="step-number">PASO 2 DE 4</div>
-                    <div class="step-title">Tu Negocio</div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Nombre del negocio</label>
-                    <input type="text" id="negocio" placeholder="Nombre de tu marca">
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
+            <div class="step" id="s2">
+                <div class="step-title">Paso 2 de 4</div>
+                <div class="step-name">Tu Negocio</div>
+                <div class="field"><label>Nombre del negocio</label><input type="text" id="negocio" placeholder="Tu marca"></div>
+                <div class="row">
+                    <div class="field">
                         <label>Nicho</label>
                         <select id="nicho">
                             <option value="">Selecciona...</option>
                             <option value="Coaching">Coaching</option>
                             <option value="Consultoría">Consultoría</option>
-                            <option value="Marketing">Marketing/Ads</option>
+                            <option value="Marketing">Marketing</option>
                             <option value="Fitness">Fitness</option>
                             <option value="Finanzas">Finanzas</option>
-                            <option value="Tech">Tech/SaaS</option>
-                            <option value="Educación">Educación</option>
+                            <option value="Tech">Tech</option>
                             <option value="Otro">Otro</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="field">
                         <label>Tiempo activo</label>
                         <select id="tiempo">
                             <option value="">Selecciona...</option>
-                            <option value="< 6 meses">< 6 meses</option>
-                            <option value="6-12 meses">6-12 meses</option>
-                            <option value="1-2 años">1-2 años</option>
-                            <option value="+2 años">+2 años</option>
+                            <option value="<6m">&lt; 6 meses</option>
+                            <option value="6-12m">6-12 meses</option>
+                            <option value="1-2a">1-2 años</option>
+                            <option value="+2a">+2 años</option>
                         </select>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Qué vendes</label>
-                    <textarea id="producto" placeholder="Describe tu servicio o producto principal"></textarea>
-                </div>
-                
+                <div class="field"><label>Qué vendes</label><textarea id="producto" placeholder="Tu servicio principal"></textarea></div>
                 <div class="buttons">
-                    <button type="button" class="btn btn-secondary" id="back2" onclick="showStep(1)">Atrás</button>
-                    <button type="button" class="btn btn-primary" id="next2" onclick="handleNext(2)">Continuar</button>
+                    <button type="button" class="btn" onclick="go(1)">Atrás</button>
+                    <button type="button" class="btn btn-primary" onclick="next(2)">Continuar</button>
                 </div>
             </div>
             
-            <!-- Step 3 -->
-            <div class="step" id="step3">
-                <div class="step-header">
-                    <div class="step-number">PASO 3 DE 4</div>
-                    <div class="step-title">Métricas Actuales</div>
+            <div class="step" id="s3">
+                <div class="step-title">Paso 3 de 4</div>
+                <div class="step-name">Métricas</div>
+                <div class="row">
+                    <div class="field"><label>Ingresos/mes</label><div class="prefix-wrap"><span>€</span><input type="number" id="ingresos" placeholder="0"></div></div>
+                    <div class="field"><label>Objetivo 90d</label><div class="prefix-wrap"><span>€</span><input type="number" id="objetivo" placeholder="0"></div></div>
                 </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Ingresos mensuales</label>
-                        <div class="input-prefix">
-                            <span class="prefix">€</span>
-                            <input type="number" id="ingresos" placeholder="0">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Objetivo 90 días</label>
-                        <div class="input-prefix">
-                            <span class="prefix">€</span>
-                            <input type="number" id="objetivo" placeholder="0">
-                        </div>
-                    </div>
+                <div class="row">
+                    <div class="field"><label>Ticket</label><div class="prefix-wrap"><span>€</span><input type="number" id="ticket" placeholder="0"></div></div>
+                    <div class="field"><label>Clientes</label><input type="number" id="clientes" placeholder="0"></div>
                 </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Precio oferta principal</label>
-                        <div class="input-prefix">
-                            <span class="prefix">€</span>
-                            <input type="number" id="ticket" placeholder="0">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Clientes activos</label>
-                        <input type="number" id="clientes" placeholder="0">
-                    </div>
+                <div class="row">
+                    <div class="field"><label>Instagram</label><div class="prefix-wrap"><span>@</span><input type="text" id="instagram" placeholder="usuario"></div></div>
+                    <div class="field"><label>Seguidores</label><input type="number" id="seguidores" placeholder="0"></div>
                 </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Instagram</label>
-                        <div class="input-prefix">
-                            <span class="prefix">@</span>
-                            <input type="text" id="instagram" placeholder="usuario">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Seguidores</label>
-                        <input type="number" id="seguidores" placeholder="0">
-                    </div>
-                </div>
-                
                 <div class="buttons">
-                    <button type="button" class="btn btn-secondary" id="back3" onclick="showStep(2)">Atrás</button>
-                    <button type="button" class="btn btn-primary" id="next3" onclick="handleNext(3)">Continuar</button>
+                    <button type="button" class="btn" onclick="go(2)">Atrás</button>
+                    <button type="button" class="btn btn-primary" onclick="next(3)">Continuar</button>
                 </div>
             </div>
             
-            <!-- Step 4 -->
-            <div class="step" id="step4">
-                <div class="step-header">
-                    <div class="step-number">PASO 4 DE 4</div>
-                    <div class="step-title">Objetivos</div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Tu mayor objetivo</label>
-                    <textarea id="objetivo_principal" placeholder="¿Qué resultado específico quieres conseguir?"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Tu mayor problema</label>
-                    <textarea id="problema" placeholder="¿Qué te está frenando ahora mismo?"></textarea>
-                </div>
-                
+            <div class="step" id="s4">
+                <div class="step-title">Paso 4 de 4</div>
+                <div class="step-name">Objetivos</div>
+                <div class="field"><label>Tu mayor objetivo</label><textarea id="objetivo_principal" placeholder="¿Qué quieres conseguir?"></textarea></div>
+                <div class="field"><label>Tu mayor problema</label><textarea id="problema" placeholder="¿Qué te frena?"></textarea></div>
                 <div class="buttons">
-                    <button type="button" class="btn btn-secondary" id="back4" onclick="showStep(3)">Atrás</button>
-                    <button type="button" class="btn btn-primary" id="submit" onclick="submitForm()">Crear Dashboard</button>
+                    <button type="button" class="btn" onclick="go(3)">Atrás</button>
+                    <button type="button" class="btn btn-primary" onclick="submit()">Crear Dashboard</button>
                 </div>
             </div>
         </form>
         
-        <!-- Loading -->
         <div class="loading" id="loading">
-            <div class="loading-spinner"></div>
-            <h2>Creando tu Dashboard</h2>
-            <p>Esto tomará unos segundos</p>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <div class="progress-text" id="progressText">0%</div>
+            <div class="spinner"></div>
+            <h2>Creando Dashboard</h2>
+            <p>Un momento...</p>
+            <div class="bar"><div class="bar-fill" id="fill"></div></div>
+            <div class="pct" id="pct">0%</div>
         </div>
         
-        <!-- Success -->
         <div class="success" id="success">
-            <div class="success-check">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            </div>
+            <div class="check">✓</div>
             <h2>Dashboard Listo</h2>
-            <p>Tu panel ha sido creado correctamente</p>
-            <a href="dashboard.html" class="dashboard-link">Acceder al Dashboard</a>
+            <p>Tu panel ha sido creado</p>
+            <a href="dashboard.html">Acceder</a>
         </div>
     </div>
     
-    <script>
-        // Variables globales
-        var currentStep = 1;
-        var form, header, progress, loading, success;
-        
-        // Inicializar al cargar
-        window.onload = function() {
-            form = document.getElementById('form');
-            header = document.getElementById('header');
-            progress = document.getElementById('progress');
-            loading = document.getElementById('loading');
-            success = document.getElementById('success');
-            
-            if (form) {
-                form.onsubmit = function(e) { e.preventDefault(); return false; };
-            }
-        };
-        
-        function updateProgress() {
-            var dots = document.querySelectorAll('.progress-dot');
-            for (var i = 0; i < dots.length; i++) {
-                dots[i].classList.remove('active', 'done');
-                if (i + 1 < currentStep) dots[i].classList.add('done');
-                if (i + 1 === currentStep) dots[i].classList.add('active');
-            }
+<script>
+function go(n) {
+    for (var i = 1; i <= 4; i++) {
+        document.getElementById('s' + i).classList.remove('active');
+        document.getElementById('d' + i).classList.remove('active', 'done');
+    }
+    document.getElementById('s' + n).classList.add('active');
+    for (var i = 1; i < n; i++) document.getElementById('d' + i).classList.add('done');
+    document.getElementById('d' + n).classList.add('active');
+    window.scrollTo(0, 0);
+}
+
+function next(n) {
+    var ok = true;
+    document.querySelectorAll('.error').forEach(function(e) { e.classList.remove('error'); });
+    
+    if (n == 1) {
+        if (!document.getElementById('nombre').value.trim()) { document.getElementById('nombre').classList.add('error'); ok = false; }
+        if (!document.getElementById('email').value.trim()) { document.getElementById('email').classList.add('error'); ok = false; }
+        if (!document.getElementById('whatsapp').value.trim()) { document.getElementById('whatsapp').classList.add('error'); ok = false; }
+    }
+    if (n == 2) {
+        if (!document.getElementById('negocio').value.trim()) { document.getElementById('negocio').classList.add('error'); ok = false; }
+        if (!document.getElementById('nicho').value) { document.getElementById('nicho').classList.add('error'); ok = false; }
+        if (!document.getElementById('producto').value.trim()) { document.getElementById('producto').classList.add('error'); ok = false; }
+    }
+    if (n == 3) {
+        if (!document.getElementById('ingresos').value) { document.getElementById('ingresos').classList.add('error'); ok = false; }
+        if (!document.getElementById('objetivo').value) { document.getElementById('objetivo').classList.add('error'); ok = false; }
+    }
+    
+    if (ok) go(n + 1);
+}
+
+function submit() {
+    var ok = true;
+    document.querySelectorAll('.error').forEach(function(e) { e.classList.remove('error'); });
+    if (!document.getElementById('objetivo_principal').value.trim()) { document.getElementById('objetivo_principal').classList.add('error'); ok = false; }
+    if (!document.getElementById('problema').value.trim()) { document.getElementById('problema').classList.add('error'); ok = false; }
+    if (!ok) return;
+    
+    var data = {
+        nombre: document.getElementById('nombre').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        whatsapp: document.getElementById('whatsapp').value.trim(),
+        pais: document.getElementById('pais').value.trim(),
+        negocio: document.getElementById('negocio').value.trim(),
+        nicho: document.getElementById('nicho').value,
+        tiempo: document.getElementById('tiempo').value,
+        producto: document.getElementById('producto').value.trim(),
+        ingresos: document.getElementById('ingresos').value || '0',
+        objetivo: document.getElementById('objetivo').value || '0',
+        ticket: document.getElementById('ticket').value || '0',
+        clientes: document.getElementById('clientes').value || '0',
+        instagram: document.getElementById('instagram').value.trim(),
+        seguidores: document.getElementById('seguidores').value || '0',
+        objetivo_principal: document.getElementById('objetivo_principal').value.trim(),
+        problema: document.getElementById('problema').value.trim(),
+        createdAt: new Date().toISOString()
+    };
+    
+    try { localStorage.setItem('gh_client_data', JSON.stringify(data)); } catch(e) { alert('Error'); return; }
+    
+    document.getElementById('form').style.display = 'none';
+    document.getElementById('progress').style.display = 'none';
+    document.getElementById('loading').classList.add('active');
+    
+    var p = 0;
+    var iv = setInterval(function() {
+        p += Math.random() * 15 + 5;
+        if (p > 100) p = 100;
+        document.getElementById('fill').style.width = p + '%';
+        document.getElementById('pct').textContent = Math.floor(p) + '%';
+        if (p >= 100) {
+            clearInterval(iv);
+            setTimeout(function() {
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('success').classList.add('active');
+                document.getElementById('header').style.display = 'none';
+            }, 200);
         }
-        
-        function showStep(n) {
-            var steps = document.querySelectorAll('.step');
-            for (var i = 0; i < steps.length; i++) {
-                steps[i].classList.remove('active');
-            }
-            document.getElementById('step' + n).classList.add('active');
-            currentStep = n;
-            updateProgress();
-            window.scrollTo(0, 0);
-        }
-        
-        function handleNext(step) {
-            if (validateStep(step)) {
-                showStep(step + 1);
-            }
-        }
-        
-        function validateStep(n) {
-            var valid = true;
-            var errors = document.querySelectorAll('.error');
-            for (var i = 0; i < errors.length; i++) {
-                errors[i].classList.remove('error');
-            }
-            
-            if (n === 1) {
-                var fields = ['nombre', 'email', 'whatsapp'];
-                for (var i = 0; i < fields.length; i++) {
-                    var el = document.getElementById(fields[i]);
-                    if (!el.value.trim()) { el.classList.add('error'); valid = false; }
-                }
-            }
-            
-            if (n === 2) {
-                var fields = ['negocio', 'producto'];
-                for (var i = 0; i < fields.length; i++) {
-                    var el = document.getElementById(fields[i]);
-                    if (!el.value.trim()) { el.classList.add('error'); valid = false; }
-                }
-                var nicho = document.getElementById('nicho');
-                if (!nicho.value) { nicho.classList.add('error'); valid = false; }
-            }
-            
-            if (n === 3) {
-                var fields = ['ingresos', 'objetivo'];
-                for (var i = 0; i < fields.length; i++) {
-                    var el = document.getElementById(fields[i]);
-                    if (!el.value) { el.classList.add('error'); valid = false; }
-                }
-            }
-            
-            if (n === 4) {
-                var fields = ['objetivo_principal', 'problema'];
-                for (var i = 0; i < fields.length; i++) {
-                    var el = document.getElementById(fields[i]);
-                    if (!el.value.trim()) { el.classList.add('error'); valid = false; }
-                }
-            }
-            
-            return valid;
-        }
-        
-        function collectData() {
-            return {
-                nombre: document.getElementById('nombre').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                whatsapp: document.getElementById('whatsapp').value.trim(),
-                pais: document.getElementById('pais').value.trim(),
-                negocio: document.getElementById('negocio').value.trim(),
-                nicho: document.getElementById('nicho').value,
-                tiempo: document.getElementById('tiempo').value,
-                producto: document.getElementById('producto').value.trim(),
-                ingresos: document.getElementById('ingresos').value || '0',
-                objetivo: document.getElementById('objetivo').value || '0',
-                ticket: document.getElementById('ticket').value || '0',
-                clientes: document.getElementById('clientes').value || '0',
-                instagram: document.getElementById('instagram').value.trim(),
-                seguidores: document.getElementById('seguidores').value || '0',
-                objetivo_principal: document.getElementById('objetivo_principal').value.trim(),
-                problema: document.getElementById('problema').value.trim(),
-                createdAt: new Date().toISOString()
-            };
-        }
-        
-        function submitForm() {
-            if (!validateStep(4)) return;
-            
-            var data = collectData();
-            
-            try {
-                localStorage.setItem('gh_client_data', JSON.stringify(data));
-            } catch (e) {
-                alert('Error guardando datos.');
-                return;
-            }
-            
-            form = document.getElementById('form');
-            progress = document.getElementById('progress');
-            loading = document.getElementById('loading');
-            header = document.getElementById('header');
-            success = document.getElementById('success');
-            
-            form.style.display = 'none';
-            progress.style.display = 'none';
-            loading.classList.add('active');
-            
-            var percent = 0;
-            var fill = document.getElementById('progressFill');
-            var text = document.getElementById('progressText');
-            
-            var interval = setInterval(function() {
-                percent += Math.random() * 12 + 3;
-                if (percent > 100) percent = 100;
-                
-                fill.style.width = percent + '%';
-                text.textContent = Math.floor(percent) + '%';
-                
-                if (percent >= 100) {
-                    clearInterval(interval);
-                    setTimeout(function() {
-                        loading.classList.remove('active');
-                        success.classList.add('active');
-                        header.style.display = 'none';
-                    }, 200);
-                }
-            }, 80);
-        }
-    </script>
+    }, 60);
+}
+</script>
 </body>
 </html>
