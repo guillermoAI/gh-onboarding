@@ -146,7 +146,7 @@
                 <div class="field"><label>Tu mayor problema</label><textarea id="problema" placeholder="¿Qué te frena?"></textarea></div>
                 <div class="buttons">
                     <button type="button" class="btn" onclick="go(3)">Atrás</button>
-                    <button type="button" class="btn btn-primary" onclick="submit()">Crear Dashboard</button>
+                    <button type="button" class="btn btn-primary" onclick="enviar()">Crear Dashboard</button>
                 </div>
             </div>
         </form>
@@ -201,7 +201,7 @@ function next(n) {
     if (ok) go(n + 1);
 }
 
-function submit() {
+function enviar() {
     var ok = true;
     document.querySelectorAll('.error').forEach(function(e) { e.classList.remove('error'); });
     if (!document.getElementById('objetivo_principal').value.trim()) { document.getElementById('objetivo_principal').classList.add('error'); ok = false; }
