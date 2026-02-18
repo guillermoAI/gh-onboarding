@@ -4,469 +4,762 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Onboarding - GH Consulting</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         :root {
-            --bg-primary: #09090b;
-            --bg-secondary: #18181b;
-            --bg-tertiary: #27272a;
+            --bg: #09090b;
+            --bg-card: #18181b;
+            --bg-input: #27272a;
             --border: #3f3f46;
             --text: #fafafa;
             --text-muted: #a1a1aa;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
+            --primary: #6366f1;
             --success: #22c55e;
-            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            --error: #ef4444;
         }
+        
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg-primary);
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
             color: var(--text);
             min-height: 100vh;
+            padding: 40px 20px;
         }
-        .container { max-width: 720px; margin: 0 auto; padding: 48px 24px; }
+        
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+        }
         
         /* Header */
-        .header { text-align: center; margin-bottom: 48px; }
-        .logo { 
-            font-size: 14px; font-weight: 600; letter-spacing: 2px;
-            background: var(--gradient); -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; margin-bottom: 16px;
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
         }
-        .header h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
-        .header p { color: var(--text-muted); font-size: 16px; }
+        
+        .logo {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            color: var(--text-muted);
+        }
         
         /* Progress */
-        .progress-bar { 
-            display: flex; gap: 6px; margin-bottom: 48px; 
+        .progress {
+            display: flex;
+            gap: 8px;
             justify-content: center;
+            margin-bottom: 48px;
         }
-        .progress-step {
-            width: 48px; height: 4px; background: var(--bg-tertiary);
-            border-radius: 2px; transition: all 0.3s;
+        
+        .progress-dot {
+            width: 40px;
+            height: 4px;
+            background: var(--bg-input);
+            border-radius: 2px;
+            transition: background 0.3s;
         }
-        .progress-step.active { background: var(--accent); }
-        .progress-step.done { background: var(--success); }
+        
+        .progress-dot.active {
+            background: var(--primary);
+        }
+        
+        .progress-dot.done {
+            background: var(--success);
+        }
+        
+        /* Steps */
+        .step {
+            display: none;
+        }
+        
+        .step.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .step-header {
+            margin-bottom: 32px;
+        }
+        
+        .step-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+        
+        .step-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .step-desc {
+            color: var(--text-muted);
+        }
         
         /* Form */
-        .form-section { display: none; animation: fadeIn 0.4s ease; }
-        .form-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .section-header { margin-bottom: 32px; }
-        .section-icon { font-size: 32px; margin-bottom: 12px; }
-        .section-title { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
-        .section-desc { color: var(--text-muted); font-size: 14px; }
-        
-        .form-grid { display: grid; gap: 20px; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
-        
-        .field { display: flex; flex-direction: column; gap: 8px; }
-        .field label { font-size: 14px; font-weight: 500; color: var(--text); }
-        .field label span { color: var(--accent); }
-        .field input, .field select, .field textarea {
-            padding: 14px 16px; background: var(--bg-secondary);
-            border: 1px solid var(--border); border-radius: 12px;
-            color: var(--text); font-size: 15px; font-family: inherit;
-            transition: all 0.2s;
+        .form-group {
+            margin-bottom: 20px;
         }
-        .field input:focus, .field select:focus, .field textarea:focus {
-            outline: none; border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
-        }
-        .field textarea { min-height: 100px; resize: vertical; }
-        .field input::placeholder, .field textarea::placeholder { color: var(--text-muted); }
         
-        .input-group { display: flex; }
-        .input-prefix {
-            padding: 14px 16px; background: var(--bg-tertiary);
-            border: 1px solid var(--border); border-right: none;
-            border-radius: 12px 0 0 12px; color: var(--text-muted);
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
         }
-        .input-group input { border-radius: 0 12px 12px 0; }
+        
+        @media (max-width: 500px) {
+            .form-row { grid-template-columns: 1fr; }
+        }
+        
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        label .req {
+            color: var(--primary);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+        
+        input.error, select.error, textarea.error {
+            border-color: var(--error);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .input-with-prefix {
+            display: flex;
+        }
+        
+        .prefix {
+            padding: 14px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-right: none;
+            border-radius: 10px 0 0 10px;
+            color: var(--text-muted);
+        }
+        
+        .input-with-prefix input {
+            border-radius: 0 10px 10px 0;
+        }
         
         /* Buttons */
-        .buttons { display: flex; gap: 12px; margin-top: 40px; }
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 40px;
+        }
+        
         .btn {
-            flex: 1; padding: 16px 24px; border-radius: 12px;
-            font-size: 15px; font-weight: 600; cursor: pointer;
-            border: none; font-family: inherit; transition: all 0.2s;
+            flex: 1;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
         }
+        
         .btn-primary {
-            background: var(--gradient); color: white;
-            box-shadow: 0 4px 24px rgba(99,102,241,0.3);
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 32px rgba(99,102,241,0.4); }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+        }
+        
         .btn-secondary {
-            background: var(--bg-secondary); color: var(--text);
+            background: var(--bg-card);
+            color: var(--text);
             border: 1px solid var(--border);
         }
-        .btn-secondary:hover { background: var(--bg-tertiary); }
         
-        /* Loading Screen */
-        .loading-screen, .success-screen { 
-            display: none; text-align: center; padding: 80px 24px;
+        .btn-secondary:hover {
+            background: var(--bg-input);
         }
-        .loading-screen.active, .success-screen.active { display: block; }
         
-        .loader-icon {
-            width: 80px; height: 80px; margin: 0 auto 32px;
-            border-radius: 20px; background: var(--gradient);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 36px; animation: pulse 2s infinite;
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
         }
-        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         
-        .loader-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-        .loader-subtitle { color: var(--text-muted); margin-bottom: 40px; }
-        
-        .progress-container {
-            max-width: 400px; margin: 0 auto 16px;
-            background: var(--bg-tertiary); border-radius: 8px;
-            height: 8px; overflow: hidden;
+        .loading.active {
+            display: block;
         }
+        
+        .loading-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            animation: pulse 1.5s ease infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .loading h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .loading p {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+        
+        .progress-bar {
+            max-width: 320px;
+            margin: 0 auto 12px;
+            height: 8px;
+            background: var(--bg-input);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
         .progress-fill {
-            height: 100%; background: var(--gradient);
-            border-radius: 8px; width: 0%; transition: width 0.3s;
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.2s;
         }
-        .progress-percent { color: var(--text-muted); font-size: 14px; }
         
-        .steps-list { max-width: 360px; margin: 40px auto 0; text-align: left; }
-        .step-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 14px 0; border-bottom: 1px solid var(--border);
-            color: var(--text-muted); font-size: 14px;
+        .progress-text {
+            color: var(--text-muted);
+            font-size: 14px;
         }
-        .step-item.done { color: var(--success); }
-        .step-item.active { color: var(--text); }
-        .step-check {
-            width: 24px; height: 24px; border-radius: 50%;
-            border: 2px solid currentColor; display: flex;
-            align-items: center; justify-content: center; font-size: 12px;
-        }
-        .step-item.done .step-check { background: var(--success); border-color: var(--success); }
         
         /* Success */
+        .success {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .success.active {
+            display: block;
+        }
+        
         .success-icon {
-            width: 100px; height: 100px; margin: 0 auto 32px;
-            border-radius: 50%; background: var(--success);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 48px; animation: scaleIn 0.5s ease;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 24px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            animation: scaleIn 0.4s ease;
         }
-        @keyframes scaleIn { from { transform: scale(0); } to { transform: scale(1); } }
-        .success-title { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
-        .success-desc { color: var(--text-muted); margin-bottom: 32px; }
-        .dashboard-btn {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 16px 32px; background: var(--gradient);
-            color: white; text-decoration: none; border-radius: 12px;
-            font-weight: 600; font-size: 16px; transition: all 0.2s;
+        
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
         }
-        .dashboard-btn:hover { transform: translateY(-2px); }
+        
+        .success h2 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .success p {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+        
+        .dashboard-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .dashboard-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+        }
+        
+        /* Hide form when loading/success */
+        .form-hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
+        <div class="header" id="header">
             <div class="logo">GH CONSULTING</div>
             <h1>Configura tu Dashboard</h1>
-            <p>Completa el formulario y crearemos tu panel personalizado</p>
+            <p>Completa el formulario para crear tu panel personalizado</p>
         </div>
         
-        <div class="progress-bar" id="progressBar">
-            <div class="progress-step active"></div>
-            <div class="progress-step"></div>
-            <div class="progress-step"></div>
-            <div class="progress-step"></div>
+        <div class="progress" id="progress">
+            <div class="progress-dot active" data-step="1"></div>
+            <div class="progress-dot" data-step="2"></div>
+            <div class="progress-dot" data-step="3"></div>
+            <div class="progress-dot" data-step="4"></div>
         </div>
         
-        <form id="onboardingForm">
-            <!-- Step 1: Info Personal -->
-            <div class="form-section active" data-step="1">
-                <div class="section-header">
-                    <div class="section-icon">👤</div>
-                    <div class="section-title">Información Personal</div>
-                    <div class="section-desc">Datos básicos para tu cuenta</div>
+        <form id="form">
+            <!-- Step 1 -->
+            <div class="step active" id="step1">
+                <div class="step-header">
+                    <div class="step-icon">👤</div>
+                    <div class="step-title">Información Personal</div>
+                    <div class="step-desc">Datos básicos para tu cuenta</div>
                 </div>
-                <div class="form-grid">
-                    <div class="form-row">
-                        <div class="field">
-                            <label>Nombre completo <span>*</span></label>
-                            <input type="text" name="nombre" required placeholder="Tu nombre">
-                        </div>
-                        <div class="field">
-                            <label>Email <span>*</span></label>
-                            <input type="email" name="email" required placeholder="tu@email.com">
-                        </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nombre completo <span class="req">*</span></label>
+                        <input type="text" id="nombre" placeholder="Tu nombre completo">
                     </div>
-                    <div class="form-row">
-                        <div class="field">
-                            <label>WhatsApp <span>*</span></label>
-                            <input type="tel" name="whatsapp" required placeholder="+34 600 000 000">
-                        </div>
-                        <div class="field">
-                            <label>País</label>
-                            <input type="text" name="pais" placeholder="España">
-                        </div>
+                    <div class="form-group">
+                        <label>Email <span class="req">*</span></label>
+                        <input type="email" id="email" placeholder="tu@email.com">
                     </div>
                 </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>WhatsApp <span class="req">*</span></label>
+                        <input type="tel" id="whatsapp" placeholder="+34 600 000 000">
+                    </div>
+                    <div class="form-group">
+                        <label>País</label>
+                        <input type="text" id="pais" placeholder="España">
+                    </div>
+                </div>
+                
                 <div class="buttons">
-                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continuar →</button>
+                    <button type="button" class="btn btn-primary" id="next1">Continuar →</button>
                 </div>
             </div>
             
-            <!-- Step 2: Tu Negocio -->
-            <div class="form-section" data-step="2">
-                <div class="section-header">
-                    <div class="section-icon">💼</div>
-                    <div class="section-title">Tu Negocio</div>
-                    <div class="section-desc">Cuéntanos sobre tu empresa</div>
+            <!-- Step 2 -->
+            <div class="step" id="step2">
+                <div class="step-header">
+                    <div class="step-icon">💼</div>
+                    <div class="step-title">Tu Negocio</div>
+                    <div class="step-desc">Cuéntanos sobre tu empresa</div>
                 </div>
-                <div class="form-grid">
-                    <div class="field">
-                        <label>Nombre del negocio <span>*</span></label>
-                        <input type="text" name="negocio" required placeholder="Nombre de tu marca">
+                
+                <div class="form-group">
+                    <label>Nombre del negocio <span class="req">*</span></label>
+                    <input type="text" id="negocio" placeholder="Nombre de tu marca">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nicho <span class="req">*</span></label>
+                        <select id="nicho">
+                            <option value="">Selecciona...</option>
+                            <option value="Coaching">Coaching</option>
+                            <option value="Consultoría">Consultoría</option>
+                            <option value="Marketing">Marketing/Ads</option>
+                            <option value="Fitness">Fitness</option>
+                            <option value="Finanzas">Finanzas</option>
+                            <option value="Tech">Tech/SaaS</option>
+                            <option value="Educación">Educación</option>
+                            <option value="Otro">Otro</option>
+                        </select>
                     </div>
-                    <div class="form-row">
-                        <div class="field">
-                            <label>Nicho <span>*</span></label>
-                            <select name="nicho" required>
-                                <option value="">Selecciona</option>
-                                <option value="coaching">Coaching</option>
-                                <option value="consultoria">Consultoría</option>
-                                <option value="marketing">Marketing/Ads</option>
-                                <option value="fitness">Fitness</option>
-                                <option value="finanzas">Finanzas</option>
-                                <option value="tech">Tech/SaaS</option>
-                                <option value="educacion">Educación</option>
-                                <option value="otro">Otro</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label>Tiempo activo</label>
-                            <select name="tiempo">
-                                <option value="">Selecciona</option>
-                                <option value="<6m">< 6 meses</option>
-                                <option value="6m-1y">6 meses - 1 año</option>
-                                <option value="1-2y">1-2 años</option>
-                                <option value=">2y">+2 años</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label>¿Qué vendes? <span>*</span></label>
-                        <textarea name="producto" required placeholder="Describe tu servicio o producto principal"></textarea>
+                    <div class="form-group">
+                        <label>Tiempo activo</label>
+                        <select id="tiempo">
+                            <option value="">Selecciona...</option>
+                            <option value="< 6 meses">< 6 meses</option>
+                            <option value="6-12 meses">6-12 meses</option>
+                            <option value="1-2 años">1-2 años</option>
+                            <option value="+2 años">+2 años</option>
+                        </select>
                     </div>
                 </div>
+                
+                <div class="form-group">
+                    <label>¿Qué vendes? <span class="req">*</span></label>
+                    <textarea id="producto" placeholder="Describe tu servicio o producto principal"></textarea>
+                </div>
+                
                 <div class="buttons">
-                    <button type="button" class="btn btn-secondary" onclick="prevStep()">← Atrás</button>
-                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continuar →</button>
+                    <button type="button" class="btn btn-secondary" id="back2">← Atrás</button>
+                    <button type="button" class="btn btn-primary" id="next2">Continuar →</button>
                 </div>
             </div>
             
-            <!-- Step 3: Métricas -->
-            <div class="form-section" data-step="3">
-                <div class="section-header">
-                    <div class="section-icon">💰</div>
-                    <div class="section-title">Métricas Actuales</div>
-                    <div class="section-desc">Números de tu negocio</div>
+            <!-- Step 3 -->
+            <div class="step" id="step3">
+                <div class="step-header">
+                    <div class="step-icon">💰</div>
+                    <div class="step-title">Métricas Actuales</div>
+                    <div class="step-desc">Números de tu negocio</div>
                 </div>
-                <div class="form-grid">
-                    <div class="form-row">
-                        <div class="field">
-                            <label>Ingresos mensuales <span>*</span></label>
-                            <div class="input-group">
-                                <span class="input-prefix">€</span>
-                                <input type="number" name="ingresos" required placeholder="0">
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label>Objetivo 90 días <span>*</span></label>
-                            <div class="input-group">
-                                <span class="input-prefix">€</span>
-                                <input type="number" name="objetivo" required placeholder="0">
-                            </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ingresos mensuales <span class="req">*</span></label>
+                        <div class="input-with-prefix">
+                            <span class="prefix">€</span>
+                            <input type="number" id="ingresos" placeholder="0">
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="field">
-                            <label>Precio oferta principal</label>
-                            <div class="input-group">
-                                <span class="input-prefix">€</span>
-                                <input type="number" name="ticket" placeholder="0">
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label>Clientes activos</label>
-                            <input type="number" name="clientes" placeholder="0">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="field">
-                            <label>Instagram @</label>
-                            <div class="input-group">
-                                <span class="input-prefix">@</span>
-                                <input type="text" name="instagram" placeholder="usuario">
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label>Seguidores IG</label>
-                            <input type="number" name="seguidores" placeholder="0">
+                    <div class="form-group">
+                        <label>Objetivo 90 días <span class="req">*</span></label>
+                        <div class="input-with-prefix">
+                            <span class="prefix">€</span>
+                            <input type="number" id="objetivo" placeholder="0">
                         </div>
                     </div>
                 </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Precio oferta principal</label>
+                        <div class="input-with-prefix">
+                            <span class="prefix">€</span>
+                            <input type="number" id="ticket" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Clientes activos</label>
+                        <input type="number" id="clientes" placeholder="0">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Instagram</label>
+                        <div class="input-with-prefix">
+                            <span class="prefix">@</span>
+                            <input type="text" id="instagram" placeholder="usuario">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Seguidores IG</label>
+                        <input type="number" id="seguidores" placeholder="0">
+                    </div>
+                </div>
+                
                 <div class="buttons">
-                    <button type="button" class="btn btn-secondary" onclick="prevStep()">← Atrás</button>
-                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continuar →</button>
+                    <button type="button" class="btn btn-secondary" id="back3">← Atrás</button>
+                    <button type="button" class="btn btn-primary" id="next3">Continuar →</button>
                 </div>
             </div>
             
-            <!-- Step 4: Objetivos -->
-            <div class="form-section" data-step="4">
-                <div class="section-header">
-                    <div class="section-icon">🎯</div>
-                    <div class="section-title">Objetivos</div>
-                    <div class="section-desc">¿Qué quieres lograr?</div>
+            <!-- Step 4 -->
+            <div class="step" id="step4">
+                <div class="step-header">
+                    <div class="step-icon">🎯</div>
+                    <div class="step-title">Objetivos</div>
+                    <div class="step-desc">¿Qué quieres lograr?</div>
                 </div>
-                <div class="form-grid">
-                    <div class="field">
-                        <label>Tu mayor objetivo <span>*</span></label>
-                        <textarea name="objetivo_principal" required placeholder="¿Qué resultado específico quieres conseguir?"></textarea>
-                    </div>
-                    <div class="field">
-                        <label>Tu mayor problema <span>*</span></label>
-                        <textarea name="problema" required placeholder="¿Qué te está frenando ahora mismo?"></textarea>
-                    </div>
+                
+                <div class="form-group">
+                    <label>Tu mayor objetivo <span class="req">*</span></label>
+                    <textarea id="objetivo_principal" placeholder="¿Qué resultado específico quieres conseguir?"></textarea>
                 </div>
+                
+                <div class="form-group">
+                    <label>Tu mayor problema <span class="req">*</span></label>
+                    <textarea id="problema" placeholder="¿Qué te está frenando ahora mismo?"></textarea>
+                </div>
+                
                 <div class="buttons">
-                    <button type="button" class="btn btn-secondary" onclick="prevStep()">← Atrás</button>
-                    <button type="button" class="btn btn-primary" onclick="submitForm()">🚀 Crear Mi Dashboard</button>
+                    <button type="button" class="btn btn-secondary" id="back4">← Atrás</button>
+                    <button type="button" class="btn btn-primary" id="submit">🚀 Crear Mi Dashboard</button>
                 </div>
             </div>
         </form>
         
         <!-- Loading -->
-        <div class="loading-screen" id="loadingScreen">
-            <div class="loader-icon">⚡</div>
-            <div class="loader-title">Creando tu Dashboard</div>
-            <div class="loader-subtitle">Esto tomará unos segundos...</div>
-            <div class="progress-container">
+        <div class="loading" id="loading">
+            <div class="loading-icon">⚡</div>
+            <h2>Creando tu Dashboard</h2>
+            <p>Esto tomará unos segundos...</p>
+            <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
-            <div class="progress-percent" id="progressPercent">0%</div>
-            <div class="steps-list">
-                <div class="step-item" data-at="0"><div class="step-check">✓</div>Guardando información</div>
-                <div class="step-item" data-at="25"><div class="step-check">✓</div>Configurando métricas</div>
-                <div class="step-item" data-at="50"><div class="step-check">✓</div>Generando insights</div>
-                <div class="step-item" data-at="75"><div class="step-check">✓</div>Creando dashboard</div>
-            </div>
+            <div class="progress-text" id="progressText">0%</div>
         </div>
         
         <!-- Success -->
-        <div class="success-screen" id="successScreen">
+        <div class="success" id="success">
             <div class="success-icon">✓</div>
-            <div class="success-title">¡Dashboard Listo!</div>
-            <div class="success-desc">Tu panel personalizado ha sido creado</div>
-            <a href="dashboard.html" class="dashboard-btn" id="dashboardBtn">
-                Acceder al Dashboard →
-            </a>
+            <h2>¡Dashboard Listo!</h2>
+            <p>Tu panel personalizado ha sido creado</p>
+            <a href="dashboard.html" class="dashboard-link">Acceder al Dashboard →</a>
         </div>
     </div>
     
     <script>
-        let step = 1;
-        const totalSteps = 4;
+        // Debug mode
+        const DEBUG = true;
+        function log(msg) { if (DEBUG) console.log('[GH]', msg); }
         
+        log('Script loaded');
+        
+        // Current step
+        let currentStep = 1;
+        
+        // Get elements
+        const form = document.getElementById('form');
+        const header = document.getElementById('header');
+        const progress = document.getElementById('progress');
+        const loading = document.getElementById('loading');
+        const success = document.getElementById('success');
+        
+        // Update progress dots
         function updateProgress() {
-            document.querySelectorAll('.progress-step').forEach((el, i) => {
-                el.classList.remove('active', 'done');
-                if (i + 1 < step) el.classList.add('done');
-                if (i + 1 === step) el.classList.add('active');
+            log('Updating progress to step ' + currentStep);
+            document.querySelectorAll('.progress-dot').forEach((dot, i) => {
+                dot.classList.remove('active', 'done');
+                if (i + 1 < currentStep) dot.classList.add('done');
+                if (i + 1 === currentStep) dot.classList.add('active');
             });
         }
         
+        // Show step
         function showStep(n) {
-            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
-            document.querySelector(`[data-step="${n}"]`).classList.add('active');
-            step = n;
+            log('Showing step ' + n);
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + n).classList.add('active');
+            currentStep = n;
             updateProgress();
+            window.scrollTo(0, 0);
         }
         
-        function nextStep() {
-            // Basic validation
-            const currentSection = document.querySelector(`[data-step="${step}"]`);
-            const requiredFields = currentSection.querySelectorAll('[required]');
+        // Validate step
+        function validateStep(n) {
+            log('Validating step ' + n);
             let valid = true;
-            requiredFields.forEach(f => {
-                if (!f.value.trim()) {
-                    f.style.borderColor = '#ef4444';
-                    valid = false;
-                } else {
-                    f.style.borderColor = '';
-                }
-            });
-            if (!valid) return;
-            if (step < totalSteps) showStep(step + 1);
+            
+            // Clear previous errors
+            document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+            
+            if (n === 1) {
+                const nombre = document.getElementById('nombre');
+                const email = document.getElementById('email');
+                const whatsapp = document.getElementById('whatsapp');
+                
+                if (!nombre.value.trim()) { nombre.classList.add('error'); valid = false; }
+                if (!email.value.trim()) { email.classList.add('error'); valid = false; }
+                if (!whatsapp.value.trim()) { whatsapp.classList.add('error'); valid = false; }
+            }
+            
+            if (n === 2) {
+                const negocio = document.getElementById('negocio');
+                const nicho = document.getElementById('nicho');
+                const producto = document.getElementById('producto');
+                
+                if (!negocio.value.trim()) { negocio.classList.add('error'); valid = false; }
+                if (!nicho.value) { nicho.classList.add('error'); valid = false; }
+                if (!producto.value.trim()) { producto.classList.add('error'); valid = false; }
+            }
+            
+            if (n === 3) {
+                const ingresos = document.getElementById('ingresos');
+                const objetivo = document.getElementById('objetivo');
+                
+                if (!ingresos.value) { ingresos.classList.add('error'); valid = false; }
+                if (!objetivo.value) { objetivo.classList.add('error'); valid = false; }
+            }
+            
+            if (n === 4) {
+                const objetivo_principal = document.getElementById('objetivo_principal');
+                const problema = document.getElementById('problema');
+                
+                if (!objetivo_principal.value.trim()) { objetivo_principal.classList.add('error'); valid = false; }
+                if (!problema.value.trim()) { problema.classList.add('error'); valid = false; }
+            }
+            
+            log('Validation result: ' + valid);
+            return valid;
         }
         
-        function prevStep() { if (step > 1) showStep(step - 1); }
+        // Collect all data
+        function collectData() {
+            return {
+                nombre: document.getElementById('nombre').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                whatsapp: document.getElementById('whatsapp').value.trim(),
+                pais: document.getElementById('pais').value.trim(),
+                negocio: document.getElementById('negocio').value.trim(),
+                nicho: document.getElementById('nicho').value,
+                tiempo: document.getElementById('tiempo').value,
+                producto: document.getElementById('producto').value.trim(),
+                ingresos: document.getElementById('ingresos').value || '0',
+                objetivo: document.getElementById('objetivo').value || '0',
+                ticket: document.getElementById('ticket').value || '0',
+                clientes: document.getElementById('clientes').value || '0',
+                instagram: document.getElementById('instagram').value.trim(),
+                seguidores: document.getElementById('seguidores').value || '0',
+                objetivo_principal: document.getElementById('objetivo_principal').value.trim(),
+                problema: document.getElementById('problema').value.trim(),
+                createdAt: new Date().toISOString()
+            };
+        }
         
+        // Submit form
         function submitForm() {
-            // Collect all data
-            const form = document.getElementById('onboardingForm');
-            const data = Object.fromEntries(new FormData(form).entries());
+            log('Submit clicked');
             
-            // Validate last step
-            if (!data.objetivo_principal || !data.problema) {
-                alert('Por favor completa los campos requeridos');
+            if (!validateStep(4)) {
+                log('Validation failed');
                 return;
             }
             
-            // Save to localStorage
-            data.createdAt = new Date().toISOString();
-            data.id = Date.now();
-            localStorage.setItem('gh_client_data', JSON.stringify(data));
+            // Collect data
+            const data = collectData();
+            log('Data collected: ' + JSON.stringify(data));
             
-            // Show loading
-            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
-            document.getElementById('progressBar').style.display = 'none';
-            document.getElementById('loadingScreen').classList.add('active');
+            // Save to localStorage
+            try {
+                localStorage.setItem('gh_client_data', JSON.stringify(data));
+                log('Data saved to localStorage');
+            } catch (e) {
+                log('Error saving: ' + e);
+                alert('Error guardando datos. Intenta de nuevo.');
+                return;
+            }
+            
+            // Hide form, show loading
+            form.style.display = 'none';
+            progress.style.display = 'none';
+            loading.classList.add('active');
+            log('Loading screen shown');
             
             // Animate progress
-            let progress = 0;
+            let percent = 0;
             const fill = document.getElementById('progressFill');
-            const percent = document.getElementById('progressPercent');
-            const steps = document.querySelectorAll('.step-item');
+            const text = document.getElementById('progressText');
             
             const interval = setInterval(() => {
-                progress += Math.random() * 12 + 3;
-                if (progress > 100) progress = 100;
+                percent += Math.random() * 10 + 5;
+                if (percent > 100) percent = 100;
                 
-                fill.style.width = progress + '%';
-                percent.textContent = Math.floor(progress) + '%';
+                fill.style.width = percent + '%';
+                text.textContent = Math.floor(percent) + '%';
                 
-                steps.forEach(s => {
-                    const at = parseInt(s.dataset.at);
-                    if (progress >= at) s.classList.add('done');
-                    if (progress >= at && progress < at + 25) s.classList.add('active');
-                });
-                
-                if (progress >= 100) {
+                if (percent >= 100) {
                     clearInterval(interval);
+                    log('Progress complete');
+                    
                     setTimeout(() => {
-                        document.getElementById('loadingScreen').classList.remove('active');
-                        document.getElementById('successScreen').classList.add('active');
-                        // Confetti!
-                        if (typeof confetti !== 'undefined') {
-                            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-                        }
-                    }, 400);
+                        loading.classList.remove('active');
+                        success.classList.add('active');
+                        header.style.display = 'none';
+                        log('Success screen shown');
+                    }, 300);
                 }
-            }, 120);
+            }, 100);
         }
+        
+        // Event listeners
+        document.getElementById('next1').addEventListener('click', () => {
+            log('Next 1 clicked');
+            if (validateStep(1)) showStep(2);
+        });
+        
+        document.getElementById('back2').addEventListener('click', () => {
+            log('Back 2 clicked');
+            showStep(1);
+        });
+        
+        document.getElementById('next2').addEventListener('click', () => {
+            log('Next 2 clicked');
+            if (validateStep(2)) showStep(3);
+        });
+        
+        document.getElementById('back3').addEventListener('click', () => {
+            log('Back 3 clicked');
+            showStep(2);
+        });
+        
+        document.getElementById('next3').addEventListener('click', () => {
+            log('Next 3 clicked');
+            if (validateStep(3)) showStep(4);
+        });
+        
+        document.getElementById('back4').addEventListener('click', () => {
+            log('Back 4 clicked');
+            showStep(3);
+        });
+        
+        document.getElementById('submit').addEventListener('click', () => {
+            log('Submit button clicked');
+            submitForm();
+        });
+        
+        // Prevent form submission
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            log('Form submit prevented');
+        });
+        
+        log('All event listeners attached');
     </script>
 </body>
 </html>
