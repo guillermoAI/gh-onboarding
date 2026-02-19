@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | GH Consulting</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #000; color: #fff; min-height: 100vh; }
+        .app { display: flex; min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar { width: 220px; background: #000; border-right: 1px solid #1a1a1a; padding: 24px 16px; position: fixed; height: 100vh; display: flex; flex-direction: column; }
+        .logo { font-size: 11px; font-weight: 600; letter-spacing: 2px; color: #fff; margin-bottom: 8px; }
+        .logo-sub { font-size: 10px; color: #444; margin-bottom: 32px; }
+        .nav-label { font-size: 9px; font-weight: 600; color: #333; text-transform: uppercase; letter-spacing: 1px; margin: 24px 0 12px; }
+        .nav-item { display: block; padding: 10px 12px; color: #666; font-size: 13px; cursor: pointer; transition: all 0.15s; border-radius: 6px; margin-bottom: 2px; }
+        .nav-item:hover { color: #fff; background: #111; }
+        .nav-item.active { color: #fff; background: #111; }
+        .nav-badge { background: #fff; color: #000; font-size: 9px; padding: 2px 6px; border-radius: 10px; margin-left: 8px; }
+        .sidebar-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid #1a1a1a; }
+        .user-avatar { width: 36px; height: 36px; background: #111; border: 1px solid #333; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; }
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .user-name { font-size: 13px; font-weight: 500; }
+        .user-email { font-size: 10px; color: #666; margin-top: 2px; }
+        
+        /* Main */
+        .main { flex: 1; margin-left: 220px; padding: 32px 40px; }
+        
+        /* Header */
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .page-header h1 { font-size: 22px; font-weight: 400; }
+        .page-header p { color: #666; font-size: 13px; margin-top: 4px; }
+        .header-actions { display: flex; gap: 12px; }
+        
+        /* Buttons */
+        .btn { padding: 10px 18px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid #333; background: transparent; color: #fff; font-family: inherit; border-radius: 6px; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+        .btn:hover { border-color: #555; background: #111; }
+        .btn-primary { background: #fff; color: #000; border-color: #fff; }
+        .btn-primary:hover { background: #eee; border-color: #eee; }
+        .btn-sm { padding: 8px 14px; font-size: 11px; }
+        .btn-danger { border-color: #ff4444; color: #ff4444; }
+        .btn-danger:hover { background: #ff4444; color: #000; }
+        
+        /* Alert */
+        .alert { padding: 16px 20px; border: 1px solid #333; background: #0a0a0a; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; border-radius: 8px; }
+        .alert strong { color: #fff; }
+        .alert-error { border-color: #ff4444; background: rgba(255,68,68,0.1); }
+        
+        /* Stats */
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+        .stat { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 20px; border-radius: 8px; }
+        .stat-label { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .stat-value { font-size: 28px; font-weight: 300; }
+        .stat-sub { font-size: 11px; color: #666; margin-top: 6px; }
+        
+        /* Grid & Cards */
+        .grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; }
+        .card { border: 1px solid #1a1a1a; padding: 20px; margin-bottom: 20px; background: #0a0a0a; border-radius: 8px; }
+        .card-title { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Progress */
+        .progress-bar { height: 6px; background: #1a1a1a; border-radius: 3px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #fff; border-radius: 3px; transition: width 0.5s ease; }
+        
+        /* Links */
+        .link-item { display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid #1a1a1a; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; text-decoration: none; color: #fff; border-radius: 6px; }
+        .link-item:hover { border-color: #333; background: #111; }
+        .link-icon { width: 40px; height: 40px; background: #111; display: flex; align-items: center; justify-content: center; font-size: 18px; border-radius: 8px; }
+        .link-title { font-size: 13px; font-weight: 500; }
+        .link-desc { font-size: 11px; color: #666; margin-top: 2px; }
+        
+        /* Calls */
+        .call-item { padding: 20px; border: 1px solid #1a1a1a; margin-bottom: 12px; background: #050505; border-radius: 8px; }
+        .call-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .call-date { font-size: 14px; font-weight: 500; }
+        .call-duration { font-size: 11px; color: #666; margin-top: 4px; }
+        .call-section { margin-bottom: 16px; }
+        .call-section:last-child { margin-bottom: 0; }
+        .call-section-title { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .call-transcript { font-size: 13px; color: #888; line-height: 1.6; max-height: 100px; overflow-y: auto; padding: 12px; background: #0a0a0a; border-radius: 4px; }
+        .call-problems { list-style: none; }
+        .call-problems li { font-size: 13px; color: #888; padding: 8px 0; border-bottom: 1px solid #111; }
+        .call-problems li:last-child { border-bottom: none; }
+        .call-suggestion { font-size: 13px; color: #fff; padding: 12px; background: #111; border-left: 2px solid #fff; border-radius: 0 4px 4px 0; }
+        
+        /* Problems */
+        .problem { padding: 16px; border: 1px solid #1a1a1a; margin-bottom: 12px; background: #050505; border-radius: 6px; }
+        .problem-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .problem-title { font-size: 13px; font-weight: 500; }
+        .problem-date { font-size: 10px; color: #666; }
+        .problem-text { font-size: 12px; color: #888; line-height: 1.5; }
+        .problem-status { font-size: 10px; padding: 4px 10px; border-radius: 4px; margin-top: 10px; display: inline-block; cursor: pointer; }
+        .problem-status.open { background: #1a1a1a; color: #888; }
+        .problem-status.resolved { background: #111; color: #fff; }
+        
+        /* Weekly rows */
+        .week-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #111; font-size: 13px; }
+        .week-row:last-child { border-bottom: none; }
+        .week-date { width: 80px; color: #666; }
+        .week-metric { flex: 1; text-align: center; }
+        
+        /* Forms */
+        .form-group { margin-bottom: 20px; }
+        .form-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block; }
+        .form-input { width: 100%; padding: 12px; background: #111; border: 1px solid #222; color: #fff; font-size: 14px; font-family: inherit; border-radius: 6px; transition: border-color 0.2s; }
+        .form-input:focus { outline: none; border-color: #555; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        textarea.form-input { min-height: 80px; resize: vertical; }
+        
+        /* Auth */
+        .auth-container { max-width: 400px; margin: 100px auto; padding: 40px; }
+        .auth-title { font-size: 24px; font-weight: 400; margin-bottom: 8px; text-align: center; }
+        .auth-subtitle { color: #666; font-size: 14px; margin-bottom: 32px; text-align: center; }
+        .auth-tabs { display: flex; margin-bottom: 24px; border-bottom: 1px solid #1a1a1a; }
+        .auth-tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; color: #666; font-size: 13px; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+        .auth-tab.active { color: #fff; border-bottom-color: #fff; }
+        .auth-error { color: #ff4444; font-size: 12px; margin-top: 8px; }
+        .auth-success { color: #4ade80; font-size: 12px; margin-top: 8px; text-align: center; }
+        
+        /* Pages */
+        .page { display: none; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 28px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; border-radius: 12px; }
+        .modal-title { font-size: 18px; font-weight: 400; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #1a1a1a; }
+        
+        /* Empty */
+        .empty { text-align: center; padding: 40px; color: #666; }
+        
+        /* Config */
+        .config-item { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid #1a1a1a; margin-bottom: 8px; border-radius: 6px; }
+        .config-item input { flex: 1; }
+        .config-label { width: 90px; font-size: 12px; color: #888; }
+        
+        /* Loading */
+        .loading { text-align: center; padding: 40px; color: #666; }
+        .spinner { width: 24px; height: 24px; border: 2px solid #333; border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Footer */
+        .footer { text-align: center; padding: 20px; font-size: 10px; color: #333; margin-top: 40px; }
+        
+        /* Responsive */
+        @media (max-width: 1000px) { .stats { grid-template-columns: repeat(2, 1fr); } .grid { grid-template-columns: 1fr; } }
+        @media (max-width: 700px) { .sidebar { display: none; } .main { margin-left: 0; padding: 20px; } .stats { grid-template-columns: 1fr; } .header-actions { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <!-- Modals -->
+    <div class="modal" id="reportModal">
+        <div class="modal-content">
+            <div class="modal-title">Reporte Semanal</div>
+            <form id="weeklyForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Ingresos esta semana (EUR)</label>
+                        <input type="number" class="form-input" id="rpt_ingresos" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nuevos clientes</label>
+                        <input type="number" class="form-input" id="rpt_clientes" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Calls realizadas</label>
+                        <input type="number" class="form-input" id="rpt_calls" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Leads/DMs</label>
+                        <input type="number" class="form-input" id="rpt_leads" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Contenido publicado</label>
+                        <input type="number" class="form-input" id="rpt_contenido" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nuevos seguidores</label>
+                        <input type="number" class="form-input" id="rpt_seguidores" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notas / Observaciones</label>
+                    <textarea class="form-input" id="rpt_notas" placeholder="Que paso esta semana?"></textarea>
+                </div>
+                <div style="display:flex;gap:12px;margin-top:24px;">
+                    <button type="button" class="btn" onclick="closeModal('reportModal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="flex:1;">Enviar Reporte</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal" id="problemModal">
+        <div class="modal-content">
+            <div class="modal-title">Reportar Problema</div>
+            <form id="problemForm">
+                <div class="form-group">
+                    <label class="form-label">Titulo del problema</label>
+                    <input type="text" class="form-input" id="prob_titulo" placeholder="Ej: No consigo cerrar calls">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Descripcion</label>
+                    <textarea class="form-input" id="prob_desc" placeholder="Explica el problema en detalle..."></textarea>
+                </div>
+                <div style="display:flex;gap:12px;margin-top:24px;">
+                    <button type="button" class="btn" onclick="closeModal('problemModal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="flex:1;">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal" id="callModal">
+        <div class="modal-content">
+            <div class="modal-title">Registrar Llamada</div>
+            <form id="callForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" class="form-input" id="call_fecha">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Duracion (min)</label>
+                        <input type="number" class="form-input" id="call_duracion" placeholder="30">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Resumen / Transcripcion</label>
+                    <textarea class="form-input" id="call_transcript" style="min-height:120px;" placeholder="Puntos clave de la llamada..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Problemas tratados (uno por linea)</label>
+                    <textarea class="form-input" id="call_problemas" placeholder="Problema 1&#10;Problema 2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Sugerencias / Proximos pasos</label>
+                    <textarea class="form-input" id="call_sugerencias" placeholder="Acciones a tomar..."></textarea>
+                </div>
+                <div style="display:flex;gap:12px;margin-top:24px;">
+                    <button type="button" class="btn" onclick="closeModal('callModal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="flex:1;">Guardar Llamada</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
+// Supabase Config
+const SUPABASE_URL = 'https://mxnhgwrtnsbgjaonizsz.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im14bmhnd3J0bnNiZ2phb25penN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0NjM4NTYsImV4cCI6MjA4NzAzOTg1Nn0.7TrU28nS7w3mpHomIJktfzuyPDlTbnVWqW71LE_ZZ_0';
+const CALENDLY_URL = 'https://calendly.com/guillermohf';
+
+// Initialize Supabase
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// App State
+let currentUser = null;
+let clientData = null;
+let weeklyReports = [];
+let problems = [];
+let calls = [];
+let clientLinks = { drive: '', miro: '', otros: '' };
+
+// DOM
+const app = document.getElementById('app');
+
+// Initialize
+async function init() {
+    showLoading();
+    
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (session) {
+        currentUser = session.user;
+        await loadClientData();
+        renderDashboard();
+    } else {
+        renderAuth();
+    }
+    
+    // Listen for auth changes
+    supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+            currentUser = session.user;
+            await loadClientData();
+            renderDashboard();
+        } else if (event === 'SIGNED_OUT') {
+            currentUser = null;
+            clientData = null;
+            renderAuth();
+        }
+    });
+}
+
+function showLoading() {
+    app.innerHTML = '<div class="loading"><div class="spinner"></div>Cargando...</div>';
+}
+
+// Auth
+function renderAuth() {
+    app.innerHTML = `
+        <div class="auth-container">
+            <div class="auth-title">GH Consulting</div>
+            <div class="auth-subtitle">Accede a tu dashboard</div>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="showAuthTab('login')">Iniciar Sesion</div>
+                <div class="auth-tab" onclick="showAuthTab('register')">Registrarse</div>
+            </div>
+            
+            <div id="auth-login" class="auth-form">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="login_email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="login_password" required>
+                    </div>
+                    <div id="login_error" class="auth-error"></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:16px;">Entrar</button>
+                </form>
+            </div>
+            
+            <div id="auth-register" class="auth-form" style="display:none;">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label class="form-label">Nombre completo</label>
+                        <input type="text" class="form-input" id="reg_nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="reg_email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="reg_password" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tu negocio</label>
+                        <input type="text" class="form-input" id="reg_negocio" placeholder="Ej: Coaching de fitness">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ingresos actuales (EUR/mes)</label>
+                        <input type="number" class="form-input" id="reg_ingresos" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Objetivo (EUR/mes)</label>
+                        <input type="number" class="form-input" id="reg_objetivo" placeholder="10000">
+                    </div>
+                    <div id="reg_error" class="auth-error"></div>
+                    <div id="reg_success" class="auth-success"></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:16px;">Crear cuenta</button>
+                </form>
+            </div>
+        </div>
+    `;
+}
+
+function showAuthTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-form').forEach(f => f.style.display = 'none');
+    
+    if (tab === 'login') {
+        document.querySelector('.auth-tab:first-child').classList.add('active');
+        document.getElementById('auth-login').style.display = 'block';
+    } else {
+        document.querySelector('.auth-tab:last-child').classList.add('active');
+        document.getElementById('auth-register').style.display = 'block';
+    }
+}
+
+async function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('login_email').value;
+    const password = document.getElementById('login_password').value;
+    const errorEl = document.getElementById('login_error');
+    
+    errorEl.textContent = '';
+    
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    
+    if (error) {
+        errorEl.textContent = error.message;
+    }
+}
+
+async function handleRegister(e) {
+    e.preventDefault();
+    const nombre = document.getElementById('reg_nombre').value;
+    const email = document.getElementById('reg_email').value;
+    const password = document.getElementById('reg_password').value;
+    const negocio = document.getElementById('reg_negocio').value;
+    const ingresos = parseInt(document.getElementById('reg_ingresos').value) || 0;
+    const objetivo = parseInt(document.getElementById('reg_objetivo').value) || 0;
+    const errorEl = document.getElementById('reg_error');
+    const successEl = document.getElementById('reg_success');
+    
+    errorEl.textContent = '';
+    successEl.textContent = '';
+    
+    // Create auth user
+    const { data: authData, error: authError } = await supabase.auth.signUp({ 
+        email, 
+        password,
+        options: {
+            data: { nombre }
+        }
+    });
+    
+    if (authError) {
+        errorEl.textContent = authError.message;
+        return;
+    }
+    
+    // Create client record
+    const { error: clientError } = await supabase.from('clients').insert({
+        email,
+        nombre,
+        negocio,
+        ingresos_actuales: ingresos,
+        objetivo
+    });
+    
+    if (clientError) {
+        errorEl.textContent = clientError.message;
+        return;
+    }
+    
+    successEl.textContent = 'Cuenta creada. Revisa tu email para confirmar.';
+}
+
+// Load Data
+async function loadClientData() {
+    if (!currentUser) return;
+    
+    // Load client
+    const { data: client } = await supabase
+        .from('clients')
+        .select('*')
+        .eq('email', currentUser.email)
+        .single();
+    
+    if (client) {
+        clientData = client;
+        
+        // Load related data
+        const [reportsRes, problemsRes, callsRes, linksRes] = await Promise.all([
+            supabase.from('weekly_reports').select('*').eq('client_id', client.id).order('created_at', { ascending: true }),
+            supabase.from('problems').select('*').eq('client_id', client.id).order('created_at', { ascending: false }),
+            supabase.from('calls').select('*').eq('client_id', client.id).order('fecha', { ascending: false }),
+            supabase.from('client_links').select('*').eq('client_id', client.id).single()
+        ]);
+        
+        weeklyReports = reportsRes.data || [];
+        problems = problemsRes.data || [];
+        calls = callsRes.data || [];
+        clientLinks = linksRes.data || { drive: '', miro: '', otros: '' };
+    }
+}
+
+// Render Dashboard
+function renderDashboard() {
+    if (!clientData) {
+        app.innerHTML = '<div class="loading">No se encontraron datos del cliente</div>';
+        return;
+    }
+    
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? 'Buenos dias' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
+    const firstName = clientData.nombre.split(' ')[0];
+    const initials = clientData.nombre.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
+    
+    // Calculate totals
+    let totalIngresos = clientData.ingresos_actuales || 0;
+    let totalClientes = clientData.clientes_actuales || 0;
+    let totalCalls = 0;
+    let totalContenido = 0;
+    
+    weeklyReports.forEach(r => {
+        totalIngresos += r.ingresos || 0;
+        totalClientes += r.clientes || 0;
+        totalCalls += r.calls || 0;
+        totalContenido += r.contenido || 0;
+    });
+    
+    const objetivo = clientData.objetivo || 0;
+    const progreso = objetivo > 0 ? Math.round((totalIngresos / objetivo) * 100) : 0;
+    const openProblems = problems.filter(p => p.status === 'open').length;
+    
+    // Check if report needed
+    const lastReport = weeklyReports.length > 0 ? new Date(weeklyReports[weeklyReports.length-1].created_at) : null;
+    const daysSinceReport = lastReport ? Math.floor((new Date() - lastReport) / (1000*60*60*24)) : 999;
+    const needsReport = daysSinceReport >= 7;
+    
+    app.innerHTML = `
+        <div class="app">
+            <aside class="sidebar">
+                <div class="logo">GH CONSULTING</div>
+                <div class="logo-sub">Dashboard del Cliente</div>
+                
+                <div class="nav-label">Principal</div>
+                <div class="nav-item active" onclick="showPage('dashboard')">Dashboard</div>
+                <div class="nav-item" onclick="showPage('metricas')">Historial</div>
+                
+                <div class="nav-label">Semanal</div>
+                <div class="nav-item" onclick="showPage('reporte')">Reporte${needsReport ? '<span class="nav-badge">!</span>' : ''}</div>
+                <div class="nav-item" onclick="showPage('problemas')">Problemas</div>
+                
+                <div class="nav-label">Llamadas</div>
+                <div class="nav-item" onclick="showPage('llamadas')">Registro</div>
+                
+                <div class="nav-label">Recursos</div>
+                <div class="nav-item" onclick="showPage('links')">Mis Links</div>
+                <div class="nav-item" onclick="showPage('config')">Configurar</div>
+                
+                <div class="sidebar-footer">
+                    <div class="user-info">
+                        <div class="user-avatar">${initials}</div>
+                        <div>
+                            <div class="user-name">${clientData.nombre}</div>
+                            <div class="user-email">${clientData.email}</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm" style="width:100%;margin-top:12px;" onclick="handleLogout()">Cerrar sesion</button>
+                </div>
+            </aside>
+            
+            <main class="main">
+                ${renderPages(greeting, firstName, totalIngresos, totalClientes, totalCalls, totalContenido, objetivo, progreso, openProblems, needsReport)}
+            </main>
+        </div>
+    `;
+    
+    setupFormHandlers();
+}
+
+function renderPages(greeting, firstName, totalIngresos, totalClientes, totalCalls, totalContenido, objetivo, progreso, openProblems, needsReport) {
+    return `
+        <!-- DASHBOARD -->
+        <div class="page active" id="page-dashboard">
+            <div class="page-header">
+                <div><h1>${greeting}, ${firstName}</h1><p>Semana ${weeklyReports.length + 1} de tu programa</p></div>
+                <div class="header-actions">
+                    <a href="${CALENDLY_URL}" target="_blank" class="btn">Reservar llamada 1-1</a>
+                    <button class="btn btn-primary" onclick="openModal('reportModal')">Reporte Semanal</button>
+                </div>
+            </div>
+            
+            ${needsReport ? '<div class="alert"><div><strong>Toca reporte semanal</strong> — Actualiza tus metricas para ver tu progreso real</div><button class="btn btn-primary btn-sm" onclick="openModal(\'reportModal\')">Enviar ahora</button></div>' : ''}
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-label">Ingresos Totales</div>
+                    <div class="stat-value">EUR ${totalIngresos.toLocaleString()}</div>
+                    <div class="stat-sub">de EUR ${objetivo.toLocaleString()} objetivo</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Clientes</div>
+                    <div class="stat-value">${totalClientes}</div>
+                    <div class="stat-sub">activos</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Calls</div>
+                    <div class="stat-value">${totalCalls}</div>
+                    <div class="stat-sub">realizadas</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Contenido</div>
+                    <div class="stat-value">${totalContenido}</div>
+                    <div class="stat-sub">piezas publicadas</div>
+                </div>
+            </div>
+            
+            <div class="grid">
+                <div>
+                    <div class="card">
+                        <div class="card-title">Progreso al Objetivo<span>${progreso}%</span></div>
+                        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
+                            <span>EUR ${totalIngresos.toLocaleString()}</span>
+                            <span style="color:#666;">EUR ${objetivo.toLocaleString()}</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(progreso,100)}%"></div></div>
+                        <div style="margin-top:20px;padding-top:16px;border-top:1px solid #1a1a1a;font-size:14px;">
+                            ${progreso >= 100 ? 'Objetivo alcanzado' : 'Faltan <strong>EUR ' + Math.max(0, objetivo - totalIngresos).toLocaleString() + '</strong> para tu objetivo'}
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title">Ultima Llamada</div>
+                        ${calls.length > 0 ? renderLastCall(calls[0]) : '<div class="empty" style="padding:20px;">No hay llamadas registradas<br><br><a href="'+CALENDLY_URL+'" target="_blank" class="btn btn-sm">Reservar primera llamada</a></div>'}
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="card">
+                        <div class="card-title">Links Rapidos</div>
+                        ${renderLink('Google Drive', clientLinks.drive)}
+                        ${renderLink('Miro', clientLinks.miro)}
+                        ${renderLink('Otros', clientLinks.otros)}
+                        <a href="${CALENDLY_URL}" target="_blank" class="link-item" style="margin-top:16px;border-color:#333;">
+                            <div class="link-icon">+</div>
+                            <div>
+                                <div class="link-title">Reservar llamada 1-1</div>
+                                <div class="link-desc">Agenda tu proxima sesion</div>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title">Problemas<span>${openProblems} abiertos</span></div>
+                        ${openProblems > 0 ? problems.filter(p => p.status === 'open').slice(0,2).map(p => '<div style="padding:10px 0;border-bottom:1px solid #1a1a1a;font-size:13px;">'+p.titulo+'</div>').join('') : '<div style="color:#666;font-size:13px;padding:8px 0;">Todo en orden</div>'}
+                        <button class="btn btn-sm" style="margin-top:12px;width:100%;" onclick="showPage('problemas')">Ver todos</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer">GH Consulting 2026</div>
+        </div>
+        
+        <!-- HISTORIAL -->
+        <div class="page" id="page-metricas">
+            <div class="page-header"><div><h1>Historial de Metricas</h1><p>Todos tus reportes semanales</p></div></div>
+            <div class="card">
+                ${weeklyReports.length === 0 ? '<div class="empty">Aun no has enviado reportes semanales.<br><br><button class="btn btn-primary btn-sm" onclick="openModal(\'reportModal\')">Enviar primer reporte</button></div>' : renderReportsTable()}
+            </div>
+        </div>
+        
+        <!-- REPORTE -->
+        <div class="page" id="page-reporte">
+            <div class="page-header"><div><h1>Reporte Semanal</h1><p>Actualiza tus metricas cada semana</p></div></div>
+            <div class="card">
+                <div class="card-title">Enviar Nuevo Reporte</div>
+                <p style="color:#888;font-size:13px;margin-bottom:20px;">Completa este formulario cada semana para trackear tu progreso.</p>
+                <button class="btn btn-primary" onclick="openModal('reportModal')">Completar Reporte</button>
+            </div>
+        </div>
+        
+        <!-- PROBLEMAS -->
+        <div class="page" id="page-problemas">
+            <div class="page-header">
+                <div><h1>Problemas</h1><p>Bloqueos y obstaculos</p></div>
+                <button class="btn btn-primary" onclick="openModal('problemModal')">+ Nuevo</button>
+            </div>
+            <div class="card">${renderProblems()}</div>
+        </div>
+        
+        <!-- LLAMADAS -->
+        <div class="page" id="page-llamadas">
+            <div class="page-header">
+                <div><h1>Registro de Llamadas</h1><p>Historial de sesiones 1-1</p></div>
+                <div class="header-actions">
+                    <a href="${CALENDLY_URL}" target="_blank" class="btn">Reservar llamada</a>
+                    <button class="btn btn-primary" onclick="openModal('callModal')">+ Registrar</button>
+                </div>
+            </div>
+            ${renderCalls()}
+        </div>
+        
+        <!-- LINKS -->
+        <div class="page" id="page-links">
+            <div class="page-header"><div><h1>Mis Links</h1><p>Accesos rapidos a tus recursos</p></div></div>
+            <div class="card">
+                ${renderLink('Google Drive', clientLinks.drive)}
+                ${renderLink('Miro', clientLinks.miro)}
+                ${renderLink('Otros', clientLinks.otros)}
+            </div>
+            <div class="card" style="margin-top:20px;">
+                <div class="card-title">Reservar Llamada</div>
+                <a href="${CALENDLY_URL}" target="_blank" class="btn btn-primary" style="width:100%;justify-content:center;">Agendar llamada 1-1</a>
+            </div>
+        </div>
+        
+        <!-- CONFIG -->
+        <div class="page" id="page-config">
+            <div class="page-header"><div><h1>Configuracion</h1><p>Personaliza tu dashboard</p></div></div>
+            <div class="card">
+                <div class="card-title">Links Personales</div>
+                <div class="config-item">
+                    <span class="config-label">Drive</span>
+                    <input type="url" class="form-input" id="cfg_drive" placeholder="https://drive.google.com/..." value="${clientLinks.drive || ''}">
+                </div>
+                <div class="config-item">
+                    <span class="config-label">Miro</span>
+                    <input type="url" class="form-input" id="cfg_miro" placeholder="https://miro.com/..." value="${clientLinks.miro || ''}">
+                </div>
+                <div class="config-item">
+                    <span class="config-label">Otros</span>
+                    <input type="url" class="form-input" id="cfg_otros" placeholder="https://..." value="${clientLinks.otros || ''}">
+                </div>
+                <button class="btn btn-primary" style="margin-top:20px;width:100%;" onclick="saveConfig()">Guardar Configuracion</button>
+            </div>
+        </div>
+    `;
+}
+
+function renderLink(title, url) {
+    if (url) {
+        return `<a href="${url}" target="_blank" class="link-item"><div class="link-icon">-</div><div><div class="link-title">${title}</div><div class="link-desc">${url.substring(0,30)}...</div></div></a>`;
+    }
+    return `<div class="link-item" style="opacity:0.4;cursor:default;"><div class="link-icon">-</div><div><div class="link-title">${title}</div><div class="link-desc">No configurado</div></div></div>`;
+}
+
+function renderLastCall(call) {
+    const d = new Date(call.fecha);
+    return `<div>
+        <div style="color:#666;font-size:12px;margin-bottom:12px;">${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()} - ${call.duracion || 30} min</div>
+        ${call.sugerencias ? '<div style="font-size:13px;color:#888;line-height:1.5;padding:12px;background:#111;border-left:2px solid #fff;border-radius:0 4px 4px 0;">'+call.sugerencias.replace(/\n/g,'<br>')+'</div>' : '<div style="color:#666;font-size:13px;">Sin sugerencias registradas</div>'}
+    </div>`;
+}
+
+function renderReportsTable() {
+    let html = '<div class="week-row" style="font-weight:500;color:#444;font-size:10px;text-transform:uppercase;"><div class="week-date">Fecha</div><div class="week-metric">EUR</div><div class="week-metric">Clientes</div><div class="week-metric">Calls</div><div class="week-metric">Leads</div><div class="week-metric">Content</div></div>';
+    weeklyReports.slice(-10).reverse().forEach(r => {
+        const d = new Date(r.created_at);
+        html += `<div class="week-row"><div class="week-date">${d.getDate()}/${d.getMonth()+1}</div><div class="week-metric" style="color:#fff;">${r.ingresos || 0}</div><div class="week-metric">${r.clientes || 0}</div><div class="week-metric">${r.calls || 0}</div><div class="week-metric">${r.leads || 0}</div><div class="week-metric">${r.contenido || 0}</div></div>`;
+    });
+    return html;
+}
+
+function renderProblems() {
+    if (problems.length === 0) {
+        return '<div class="empty">No hay problemas registrados<br><br><button class="btn btn-sm" onclick="openModal(\'problemModal\')">Reportar un problema</button></div>';
+    }
+    return problems.map(p => {
+        const d = new Date(p.created_at);
+        return `<div class="problem">
+            <div class="problem-header">
+                <div class="problem-title">${p.titulo}</div>
+                <div class="problem-date">${d.getDate()}/${d.getMonth()+1}</div>
+            </div>
+            <div class="problem-text">${p.descripcion || ''}</div>
+            <span class="problem-status ${p.status}" onclick="toggleProblem('${p.id}')">${p.status === 'open' ? 'Abierto' : 'Resuelto'}</span>
+        </div>`;
+    }).join('');
+}
+
+function renderCalls() {
+    if (calls.length === 0) {
+        return '<div class="empty">No hay llamadas registradas<br><br><button class="btn btn-sm" onclick="openModal(\'callModal\')">Registrar primera llamada</button></div>';
+    }
+    return calls.map(c => {
+        const d = new Date(c.fecha);
+        const problemsList = (c.problemas || '').split('\n').filter(p => p.trim());
+        return `<div class="call-item">
+            <div class="call-header">
+                <div>
+                    <div class="call-date">${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}</div>
+                    <div class="call-duration">${c.duracion || 30} min</div>
+                </div>
+                <button class="btn btn-sm btn-danger" onclick="deleteCall('${c.id}')">Eliminar</button>
+            </div>
+            ${c.transcript ? '<div class="call-section"><div class="call-section-title">Resumen</div><div class="call-transcript">'+c.transcript.replace(/\n/g,'<br>')+'</div></div>' : ''}
+            ${problemsList.length > 0 ? '<div class="call-section"><div class="call-section-title">Problemas tratados</div><ul class="call-problems">'+problemsList.map(p => '<li>'+p+'</li>').join('')+'</ul></div>' : ''}
+            ${c.sugerencias ? '<div class="call-section"><div class="call-section-title">Sugerencias</div><div class="call-suggestion">'+c.sugerencias.replace(/\n/g,'<br>')+'</div></div>' : ''}
+        </div>`;
+    }).join('');
+}
+
+// Navigation
+window.showPage = function(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const el = document.getElementById('page-' + page);
+    if(el) el.classList.add('active');
+    const navMap = {dashboard:0, metricas:1, reporte:2, problemas:3, llamadas:4, links:5, config:6};
+    const navItems = document.querySelectorAll('.nav-item');
+    if(navItems[navMap[page]]) navItems[navMap[page]].classList.add('active');
+}
+
+// Modals
+window.openModal = function(id) {
+    document.getElementById(id).classList.add('active');
+    if (id === 'callModal') {
+        document.getElementById('call_fecha').value = new Date().toISOString().split('T')[0];
+    }
+}
+
+window.closeModal = function(id) {
+    document.getElementById(id).classList.remove('active');
+}
+
+// Form handlers
+function setupFormHandlers() {
+    document.getElementById('weeklyForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const { error } = await supabase.from('weekly_reports').insert({
+            client_id: clientData.id,
+            ingresos: parseInt(document.getElementById('rpt_ingresos').value) || 0,
+            clientes: parseInt(document.getElementById('rpt_clientes').value) || 0,
+            calls: parseInt(document.getElementById('rpt_calls').value) || 0,
+            leads: parseInt(document.getElementById('rpt_leads').value) || 0,
+            contenido: parseInt(document.getElementById('rpt_contenido').value) || 0,
+            seguidores: parseInt(document.getElementById('rpt_seguidores').value) || 0,
+            notas: document.getElementById('rpt_notas').value
+        });
+        if (!error) {
+            closeModal('reportModal');
+            await loadClientData();
+            renderDashboard();
+        }
+    };
+    
+    document.getElementById('problemForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const titulo = document.getElementById('prob_titulo').value.trim();
+        if (!titulo) return;
+        const { error } = await supabase.from('problems').insert({
+            client_id: clientData.id,
+            titulo,
+            descripcion: document.getElementById('prob_desc').value,
+            status: 'open'
+        });
+        if (!error) {
+            closeModal('problemModal');
+            await loadClientData();
+            renderDashboard();
+        }
+    };
+    
+    document.getElementById('callForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const { error } = await supabase.from('calls').insert({
+            client_id: clientData.id,
+            fecha: document.getElementById('call_fecha').value,
+            duracion: parseInt(document.getElementById('call_duracion').value) || 30,
+            transcript: document.getElementById('call_transcript').value,
+            problemas: document.getElementById('call_problemas').value,
+            sugerencias: document.getElementById('call_sugerencias').value
+        });
+        if (!error) {
+            closeModal('callModal');
+            await loadClientData();
+            renderDashboard();
+        }
+    };
+    
+    document.querySelectorAll('.modal').forEach(m => {
+        m.onclick = function(e) { if(e.target === this) closeModal(this.id); };
+    });
+}
+
+window.toggleProblem = async function(id) {
+    const problem = problems.find(p => p.id === id);
+    if (!problem) return;
+    const newStatus = problem.status === 'open' ? 'resolved' : 'open';
+    await supabase.from('problems').update({ status: newStatus }).eq('id', id);
+    await loadClientData();
+    renderDashboard();
+}
+
+window.deleteCall = async function(id) {
+    if (!confirm('Eliminar esta llamada?')) return;
+    await supabase.from('calls').delete().eq('id', id);
+    await loadClientData();
+    renderDashboard();
+}
+
+window.saveConfig = async function() {
+    const links = {
+        drive: document.getElementById('cfg_drive').value,
+        miro: document.getElementById('cfg_miro').value,
+        otros: document.getElementById('cfg_otros').value
+    };
+    
+    if (clientLinks.client_id) {
+        await supabase.from('client_links').update(links).eq('client_id', clientData.id);
+    } else {
+        await supabase.from('client_links').insert({ ...links, client_id: clientData.id });
+    }
+    
+    alert('Configuracion guardada');
+    await loadClientData();
+    renderDashboard();
+}
+
+window.handleLogout = async function() {
+    await supabase.auth.signOut();
+}
+
+// Initialize
+init();
+</script>
+</body>
+</html>
