@@ -3,112 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - GH Consulting</title>
+    <title>Dashboard | GH Consulting</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #000; color: #fff; min-height: 100vh; }
         .app { display: flex; min-height: 100vh; }
         
-        .sidebar { width: 200px; background: #000; border-right: 1px solid #1a1a1a; padding: 24px 16px; position: fixed; height: 100vh; display: flex; flex-direction: column; }
-        .logo { font-size: 10px; font-weight: 600; letter-spacing: 2px; color: #666; margin-bottom: 40px; }
-        .nav-label { font-size: 10px; font-weight: 500; color: #444; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 12px; }
-        .nav-item { display: block; padding: 10px 12px; color: #666; font-size: 13px; cursor: pointer; transition: all 0.15s; border-radius: 4px; margin-bottom: 2px; }
+        /* Sidebar */
+        .sidebar { width: 220px; background: #000; border-right: 1px solid #1a1a1a; padding: 24px 16px; position: fixed; height: 100vh; display: flex; flex-direction: column; }
+        .logo { font-size: 11px; font-weight: 600; letter-spacing: 2px; color: #4ade80; margin-bottom: 8px; }
+        .logo-sub { font-size: 10px; color: #444; margin-bottom: 40px; }
+        .nav-label { font-size: 9px; font-weight: 600; color: #333; text-transform: uppercase; letter-spacing: 1px; margin: 24px 0 12px; }
+        .nav-item { display: block; padding: 10px 12px; color: #666; font-size: 13px; cursor: pointer; transition: all 0.15s; border-radius: 6px; margin-bottom: 2px; }
         .nav-item:hover { color: #fff; background: #111; }
         .nav-item.active { color: #fff; background: #111; }
         .nav-item.highlight { color: #4ade80; }
+        .nav-badge { background: #4ade80; color: #000; font-size: 9px; padding: 2px 6px; border-radius: 10px; margin-left: 8px; }
         .sidebar-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid #1a1a1a; }
-        .user-avatar { width: 32px; height: 32px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+        .user-avatar { width: 36px; height: 36px; background: #111; border: 1px solid #333; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; }
         .user-info { display: flex; align-items: center; gap: 10px; }
-        .user-name { font-size: 12px; font-weight: 500; }
-        .user-email { font-size: 10px; color: #666; }
+        .user-name { font-size: 13px; font-weight: 500; }
+        .user-email { font-size: 10px; color: #666; margin-top: 2px; }
         
-        .main { flex: 1; margin-left: 200px; padding: 32px; max-width: 1100px; }
+        /* Main */
+        .main { flex: 1; margin-left: 220px; padding: 32px 40px; }
         
-        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid #1a1a1a; }
-        .page-header h1 { font-size: 20px; font-weight: 400; }
+        /* Header */
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .page-header h1 { font-size: 22px; font-weight: 400; }
         .page-header p { color: #666; font-size: 13px; margin-top: 4px; }
         
-        .btn { padding: 10px 16px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid #333; background: transparent; color: #fff; font-family: inherit; }
-        .btn:hover { border-color: #666; }
+        /* Buttons */
+        .btn { padding: 10px 18px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid #333; background: transparent; color: #fff; font-family: inherit; border-radius: 6px; transition: all 0.2s; }
+        .btn:hover { border-color: #555; background: #111; }
         .btn-primary { background: #fff; color: #000; border-color: #fff; }
+        .btn-primary:hover { background: #eee; }
         .btn-success { background: #4ade80; color: #000; border-color: #4ade80; }
+        .btn-success:hover { background: #22c55e; }
+        .btn-sm { padding: 8px 14px; font-size: 11px; }
         
-        .alert { padding: 16px 20px; border: 1px solid #4ade80; background: rgba(74,222,128,0.1); margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+        /* Alert */
+        .alert { padding: 16px 20px; border: 1px solid #4ade80; background: rgba(74,222,128,0.08); margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; border-radius: 8px; }
         .alert strong { color: #4ade80; }
         
+        /* Stats */
         .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
-        .stat { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 20px; }
-        .stat-label { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .stat { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 20px; border-radius: 8px; }
+        .stat-label { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
         .stat-value { font-size: 28px; font-weight: 300; }
-        .stat-sub { font-size: 11px; color: #666; margin-top: 4px; }
+        .stat-sub { font-size: 11px; color: #666; margin-top: 6px; }
+        .stat-change { font-size: 11px; margin-top: 6px; }
+        .stat-change.up { color: #4ade80; }
+        .stat-change.down { color: #f87171; }
         
+        /* Grid & Cards */
         .grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; }
-        .card { border: 1px solid #1a1a1a; padding: 20px; margin-bottom: 20px; background: #0a0a0a; }
-        .card-title { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #1a1a1a; }
+        .card { border: 1px solid #1a1a1a; padding: 20px; margin-bottom: 20px; background: #0a0a0a; border-radius: 8px; }
+        .card-title { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
+        .card-title span { font-size: 10px; text-transform: none; letter-spacing: 0; }
         
+        /* Progress */
         .progress-row { margin-bottom: 20px; }
         .progress-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
         .progress-header span:last-child { color: #666; }
-        .progress-bar { height: 4px; background: #1a1a1a; border-radius: 2px; }
-        .progress-fill { height: 100%; background: #4ade80; border-radius: 2px; }
+        .progress-bar { height: 6px; background: #1a1a1a; border-radius: 3px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #4ade80; border-radius: 3px; transition: width 0.5s ease; }
         
-        .link-item { display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid #1a1a1a; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; text-decoration: none; color: #fff; }
+        /* Links */
+        .link-item { display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid #1a1a1a; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; text-decoration: none; color: #fff; border-radius: 6px; }
         .link-item:hover { border-color: #333; background: #111; }
-        .link-icon { width: 36px; height: 36px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 16px; border-radius: 4px; }
-        .link-title { font-size: 13px; }
+        .link-icon { width: 40px; height: 40px; background: #111; display: flex; align-items: center; justify-content: center; font-size: 18px; border-radius: 8px; }
+        .link-title { font-size: 13px; font-weight: 500; }
         .link-desc { font-size: 11px; color: #666; margin-top: 2px; }
         
-        .problem { padding: 16px; border: 1px solid #1a1a1a; margin-bottom: 12px; background: #050505; }
+        /* Problems */
+        .problem { padding: 16px; border: 1px solid #1a1a1a; margin-bottom: 12px; background: #050505; border-radius: 6px; }
         .problem-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .problem-title { font-size: 13px; font-weight: 500; }
         .problem-date { font-size: 10px; color: #666; }
         .problem-text { font-size: 12px; color: #888; line-height: 1.5; }
-        .problem-status { font-size: 10px; padding: 3px 8px; border-radius: 3px; margin-top: 10px; display: inline-block; }
-        .problem-status.open { background: rgba(248,113,113,0.2); color: #f87171; }
-        .problem-status.resolved { background: rgba(74,222,128,0.2); color: #4ade80; }
+        .problem-status { font-size: 10px; padding: 4px 10px; border-radius: 4px; margin-top: 10px; display: inline-block; cursor: pointer; }
+        .problem-status.open { background: rgba(248,113,113,0.15); color: #f87171; }
+        .problem-status.resolved { background: rgba(74,222,128,0.15); color: #4ade80; }
         
-        .week-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #1a1a1a; font-size: 13px; }
+        /* Weekly rows */
+        .week-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #111; font-size: 13px; }
         .week-row:last-child { border-bottom: none; }
         .week-date { width: 80px; color: #666; }
         .week-metric { flex: 1; text-align: center; }
         
+        /* Forms */
         .form-group { margin-bottom: 20px; }
         .form-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block; }
-        .form-input { width: 100%; padding: 12px; background: #111; border: 1px solid #222; color: #fff; font-size: 14px; font-family: inherit; }
-        .form-input:focus { outline: none; border-color: #444; }
+        .form-input { width: 100%; padding: 12px; background: #111; border: 1px solid #222; color: #fff; font-size: 14px; font-family: inherit; border-radius: 6px; transition: border-color 0.2s; }
+        .form-input:focus { outline: none; border-color: #4ade80; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         textarea.form-input { min-height: 80px; resize: vertical; }
         
-        .page { display: none; }
+        /* Pages */
+        .page { display: none; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; }
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; }
         .modal.active { display: flex; }
-        .modal-content { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 24px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
-        .modal-title { font-size: 16px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #1a1a1a; }
+        .modal-content { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 28px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; border-radius: 12px; }
+        .modal-title { font-size: 18px; font-weight: 400; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #1a1a1a; }
         
+        /* Empty */
         .empty { text-align: center; padding: 40px; color: #666; }
         
-        .config-item { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid #1a1a1a; margin-bottom: 8px; }
+        /* Config */
+        .config-item { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid #1a1a1a; margin-bottom: 8px; border-radius: 6px; }
         .config-item input { flex: 1; }
+        .config-label { width: 90px; font-size: 12px; color: #888; }
         
-        @media (max-width: 900px) { .stats { grid-template-columns: repeat(2, 1fr); } .grid { grid-template-columns: 1fr; } }
-        @media (max-width: 600px) { .sidebar { display: none; } .main { margin-left: 0; padding: 20px; } .stats { grid-template-columns: 1fr; } }
+        /* Footer */
+        .footer { text-align: center; padding: 20px; font-size: 10px; color: #333; margin-top: 40px; }
+        
+        /* Responsive */
+        @media (max-width: 1000px) { .stats { grid-template-columns: repeat(2, 1fr); } .grid { grid-template-columns: 1fr; } }
+        @media (max-width: 700px) { .sidebar { display: none; } .main { margin-left: 0; padding: 20px; } .stats { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <div class="app">
         <aside class="sidebar">
             <div class="logo">GH CONSULTING</div>
+            <div class="logo-sub">Dashboard del Cliente</div>
+            
             <div class="nav-label">Principal</div>
-            <div class="nav-item active" onclick="showPage('dashboard')">Dashboard</div>
-            <div class="nav-item" onclick="showPage('metricas')">Historial</div>
+            <div class="nav-item active" onclick="showPage('dashboard')">📊 Dashboard</div>
+            <div class="nav-item" onclick="showPage('metricas')">📈 Historial</div>
+            
             <div class="nav-label">Semanal</div>
-            <div class="nav-item highlight" onclick="showPage('reporte')">📝 Reporte</div>
-            <div class="nav-item" onclick="showPage('problemas')">Problemas</div>
+            <div class="nav-item highlight" onclick="showPage('reporte')">📝 Reporte<span class="nav-badge" id="reportBadge" style="display:none;">!</span></div>
+            <div class="nav-item" onclick="showPage('problemas')">🚨 Problemas</div>
+            
             <div class="nav-label">Recursos</div>
-            <div class="nav-item" onclick="showPage('links')">Mis Links</div>
+            <div class="nav-item" onclick="showPage('links')">🔗 Mis Links</div>
             <div class="nav-item" onclick="showPage('config')">⚙️ Configurar</div>
+            
             <div class="sidebar-footer">
                 <div class="user-info">
                     <div class="user-avatar" id="avatar">--</div>
@@ -160,7 +197,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Notas / Observaciones</label>
-                    <textarea class="form-input" id="rpt_notas" placeholder="Qué pasó esta semana..."></textarea>
+                    <textarea class="form-input" id="rpt_notas" placeholder="¿Qué pasó esta semana? ¿Qué aprendiste?"></textarea>
                 </div>
                 <div style="display:flex;gap:12px;margin-top:24px;">
                     <button type="button" class="btn" onclick="closeModal('reportModal')">Cancelar</button>
@@ -181,11 +218,11 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Descripción</label>
-                    <textarea class="form-input" id="prob_desc" placeholder="Explica el problema en detalle..."></textarea>
+                    <textarea class="form-input" id="prob_desc" placeholder="Explica el problema en detalle para que podamos resolverlo juntos..."></textarea>
                 </div>
                 <div style="display:flex;gap:12px;margin-top:24px;">
                     <button type="button" class="btn" onclick="closeModal('problemModal')">Cancelar</button>
-                    <button type="submit" class="btn btn-success" style="flex:1;">Guardar Problema</button>
+                    <button type="submit" class="btn btn-success" style="flex:1;">Guardar</button>
                 </div>
             </form>
         </div>
@@ -207,8 +244,10 @@ try { var l = localStorage.getItem('gh_client_links'); if (l) clientLinks = JSON
 var main = document.getElementById('main');
 
 if (!data || !data.nombre) {
-    main.innerHTML = '<div class="empty" style="min-height:80vh;"><h2>Sin datos</h2><p>Completa el onboarding primero</p><a href="index.html" class="btn btn-primary">Ir al Onboarding</a></div>';
+    main.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;"><div style="font-size:48px;margin-bottom:24px;">👋</div><h2 style="font-size:20px;font-weight:400;margin-bottom:8px;">Bienvenido a GH Consulting</h2><p style="color:#666;font-size:14px;margin-bottom:32px;">Completa el onboarding para acceder a tu dashboard personalizado</p><a href="index.html" class="btn btn-success" style="text-decoration:none;">Comenzar Onboarding →</a></div>';
 } else {
+    var hour = new Date().getHours();
+    var greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
     var firstName = data.nombre.split(' ')[0];
     var initials = data.nombre.split(' ').map(function(n){return n[0]}).join('').toUpperCase().slice(0,2);
     
@@ -219,60 +258,69 @@ if (!data || !data.nombre) {
     var totalClientes = parseInt(data.clientes) || 0;
     var totalCalls = 0;
     var totalLeads = 0;
+    var totalContenido = 0;
     weeklyReports.forEach(function(r) {
         totalIngresos += parseInt(r.ingresos) || 0;
         totalClientes += parseInt(r.clientes) || 0;
         totalCalls += parseInt(r.calls) || 0;
         totalLeads += parseInt(r.leads) || 0;
+        totalContenido += parseInt(r.contenido) || 0;
     });
     
     var progreso = objetivo > 0 ? Math.round((totalIngresos / objetivo) * 100) : 0;
     var openProblems = problems.filter(function(p){ return p.status === 'open'; }).length;
     
+    // Check if report needed
+    var lastReport = weeklyReports.length > 0 ? new Date(weeklyReports[weeklyReports.length-1].date) : null;
+    var daysSinceReport = lastReport ? Math.floor((new Date() - lastReport) / (1000*60*60*24)) : 999;
+    var needsReport = daysSinceReport >= 7;
+    
     document.getElementById('avatar').textContent = initials;
     document.getElementById('userName').textContent = data.nombre;
     document.getElementById('userEmail').textContent = data.email;
+    if (needsReport) document.getElementById('reportBadge').style.display = 'inline';
     
     // History HTML
     var historyHtml = '';
     if (weeklyReports.length === 0) {
-        historyHtml = '<div class="empty">Aún no hay reportes</div>';
+        historyHtml = '<div class="empty">Aún no has enviado reportes semanales.<br><br><button class="btn btn-success btn-sm" onclick="openModal(\'reportModal\')">Enviar primer reporte</button></div>';
     } else {
-        historyHtml = '<div class="week-row" style="font-weight:500;color:#666;font-size:10px;text-transform:uppercase;"><div class="week-date">Fecha</div><div class="week-metric">Ingresos</div><div class="week-metric">Clientes</div><div class="week-metric">Calls</div><div class="week-metric">Leads</div></div>';
+        historyHtml = '<div class="week-row" style="font-weight:500;color:#444;font-size:10px;text-transform:uppercase;letter-spacing:0.5px;"><div class="week-date">Fecha</div><div class="week-metric">€</div><div class="week-metric">Clientes</div><div class="week-metric">Calls</div><div class="week-metric">Leads</div><div class="week-metric">Content</div></div>';
         weeklyReports.slice(-10).reverse().forEach(function(r) {
             var d = new Date(r.date);
-            historyHtml += '<div class="week-row"><div class="week-date">'+d.getDate()+'/'+(d.getMonth()+1)+'</div><div class="week-metric">€'+(r.ingresos||0)+'</div><div class="week-metric">'+(r.clientes||0)+'</div><div class="week-metric">'+(r.calls||0)+'</div><div class="week-metric">'+(r.leads||0)+'</div></div>';
+            historyHtml += '<div class="week-row"><div class="week-date">'+d.getDate()+'/'+(d.getMonth()+1)+'</div><div class="week-metric" style="color:#4ade80;">€'+(r.ingresos||0)+'</div><div class="week-metric">'+(r.clientes||0)+'</div><div class="week-metric">'+(r.calls||0)+'</div><div class="week-metric">'+(r.leads||0)+'</div><div class="week-metric">'+(r.contenido||0)+'</div></div>';
         });
     }
     
     // Problems HTML
     var problemsHtml = '';
     if (problems.length === 0) {
-        problemsHtml = '<div class="empty">No hay problemas registrados</div>';
+        problemsHtml = '<div class="empty">No hay problemas registrados 👍<br><br><button class="btn btn-sm" onclick="openModal(\'problemModal\')">Reportar un problema</button></div>';
     } else {
         problems.slice().reverse().forEach(function(p, i) {
             var d = new Date(p.date);
             var statusClass = p.status === 'open' ? 'open' : 'resolved';
-            var statusText = p.status === 'open' ? 'Abierto' : 'Resuelto';
+            var statusText = p.status === 'open' ? '⚠️ Abierto' : '✅ Resuelto';
             problemsHtml += '<div class="problem"><div class="problem-header"><div class="problem-title">'+p.titulo+'</div><div class="problem-date">'+d.getDate()+'/'+(d.getMonth()+1)+'</div></div><div class="problem-text">'+p.desc+'</div><span class="problem-status '+statusClass+'" onclick="toggleProblem('+(problems.length-1-i)+')">'+statusText+'</span></div>';
         });
     }
     
-    // Links HTML
-    function linkHtml(icon, title, desc, url, key) {
+    function linkHtml(icon, title, desc, url) {
         if (url) {
             return '<a href="'+url+'" target="_blank" class="link-item"><div class="link-icon">'+icon+'</div><div><div class="link-title">'+title+'</div><div class="link-desc">'+desc+'</div></div></a>';
         }
-        return '<div class="link-item" style="opacity:0.5;cursor:default;"><div class="link-icon">'+icon+'</div><div><div class="link-title">'+title+'</div><div class="link-desc">No configurado</div></div></div>';
+        return '<div class="link-item" style="opacity:0.4;cursor:default;"><div class="link-icon">'+icon+'</div><div><div class="link-title">'+title+'</div><div class="link-desc" style="color:#555;">No configurado</div></div></div>';
     }
     
     main.innerHTML = `
         <!-- DASHBOARD -->
         <div class="page active" id="page-dashboard">
             <div class="page-header">
-                <div><h1>Dashboard de ${firstName}</h1><p>Semana ${weeklyReports.length + 1}</p></div>
+                <div><h1>${greeting}, ${firstName}</h1><p>Semana ${weeklyReports.length + 1} de tu programa</p></div>
                 <button class="btn btn-success" onclick="openModal('reportModal')">📝 Reporte Semanal</button>
             </div>
+            
+            ${needsReport ? '<div class="alert"><div><strong>📅 Toca reporte semanal</strong> — Actualiza tus métricas para ver tu progreso real</div><button class="btn btn-success btn-sm" onclick="openModal(\'reportModal\')">Enviar ahora</button></div>' : ''}
             
             <div class="stats">
                 <div class="stat">
@@ -283,7 +331,7 @@ if (!data || !data.nombre) {
                 <div class="stat">
                     <div class="stat-label">Clientes</div>
                     <div class="stat-value">${totalClientes}</div>
-                    <div class="stat-sub">totales</div>
+                    ${weeklyReports.length > 0 ? '<div class="stat-change up">+' + (totalClientes - parseInt(data.clientes||0)) + ' del programa</div>' : '<div class="stat-sub">activos</div>'}
                 </div>
                 <div class="stat">
                     <div class="stat-label">Calls</div>
@@ -291,22 +339,22 @@ if (!data || !data.nombre) {
                     <div class="stat-sub">realizadas</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-label">Leads</div>
-                    <div class="stat-value">${totalLeads}</div>
-                    <div class="stat-sub">recibidos</div>
+                    <div class="stat-label">Contenido</div>
+                    <div class="stat-value">${totalContenido}</div>
+                    <div class="stat-sub">piezas publicadas</div>
                 </div>
             </div>
             
             <div class="grid">
                 <div>
                     <div class="card">
-                        <div class="card-title">Progreso al Objetivo</div>
+                        <div class="card-title">Progreso al Objetivo<span>${progreso}%</span></div>
                         <div class="progress-row">
-                            <div class="progress-header"><span>€${totalIngresos.toLocaleString()} / €${objetivo.toLocaleString()}</span><span>${progreso}%</span></div>
+                            <div class="progress-header"><span>€${totalIngresos.toLocaleString()}</span><span>€${objetivo.toLocaleString()}</span></div>
                             <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(progreso,100)}%"></div></div>
                         </div>
-                        <div style="margin-top:16px;font-size:13px;color:#888;">
-                            Faltan <strong style="color:#fff;">€${Math.max(0, objetivo - totalIngresos).toLocaleString()}</strong> para tu objetivo
+                        <div style="margin-top:20px;padding-top:16px;border-top:1px solid #1a1a1a;font-size:14px;">
+                            ${progreso >= 100 ? '<span style="color:#4ade80;">🎉 ¡Objetivo alcanzado!</span>' : 'Faltan <strong style="color:#fff;">€' + Math.max(0, objetivo - totalIngresos).toLocaleString() + '</strong> para tu objetivo'}
                         </div>
                     </div>
                     
@@ -315,43 +363,44 @@ if (!data || !data.nombre) {
                         ${weeklyReports.length > 0 ? (function(){
                             var last = weeklyReports[weeklyReports.length-1];
                             var d = new Date(last.date);
-                            return '<div style="font-size:13px;"><div style="color:#666;margin-bottom:12px;">'+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;"><div>Ingresos: <strong>€'+(last.ingresos||0)+'</strong></div><div>Clientes: <strong>'+(last.clientes||0)+'</strong></div><div>Calls: <strong>'+(last.calls||0)+'</strong></div><div>Leads: <strong>'+(last.leads||0)+'</strong></div></div>'+(last.notas ? '<div style="margin-top:12px;padding-top:12px;border-top:1px solid #1a1a1a;color:#888;">'+last.notas+'</div>' : '')+'</div>';
-                        })() : '<div class="empty">No hay reportes aún</div>'}
+                            return '<div><div style="color:#666;font-size:12px;margin-bottom:16px;">📅 '+d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+'</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:center;"><div><div style="font-size:20px;font-weight:300;color:#4ade80;">€'+(last.ingresos||0)+'</div><div style="font-size:10px;color:#666;margin-top:4px;">INGRESOS</div></div><div><div style="font-size:20px;font-weight:300;">'+(last.clientes||0)+'</div><div style="font-size:10px;color:#666;margin-top:4px;">CLIENTES</div></div><div><div style="font-size:20px;font-weight:300;">'+(last.calls||0)+'</div><div style="font-size:10px;color:#666;margin-top:4px;">CALLS</div></div></div>'+(last.notas ? '<div style="margin-top:16px;padding-top:16px;border-top:1px solid #1a1a1a;font-size:13px;color:#888;line-height:1.5;">'+last.notas+'</div>' : '')+'</div>';
+                        })() : '<div class="empty" style="padding:20px;">No hay reportes aún</div>'}
                     </div>
                 </div>
                 
                 <div>
                     <div class="card">
                         <div class="card-title">Links Rápidos</div>
-                        ${linkHtml('📁', 'Google Drive', 'Documentos compartidos', clientLinks.drive)}
-                        ${linkHtml('🎨', 'Miro', 'Tableros y mapas', clientLinks.miro)}
-                        ${linkHtml('🎥', 'Fathom', 'Grabaciones de calls', clientLinks.fathom)}
+                        ${linkHtml('📁', 'Google Drive', 'Documentos', clientLinks.drive)}
+                        ${linkHtml('🎨', 'Miro', 'Tableros', clientLinks.miro)}
+                        ${linkHtml('🎥', 'Fathom', 'Grabaciones', clientLinks.fathom)}
                         ${linkHtml('📅', 'Calendario', 'Agendar call', clientLinks.calendar)}
                     </div>
                     
                     <div class="card">
-                        <div class="card-title">Problemas Abiertos (${openProblems})</div>
-                        ${openProblems > 0 ? problems.filter(function(p){return p.status==='open';}).slice(0,2).map(function(p){return '<div style="padding:10px 0;border-bottom:1px solid #1a1a1a;font-size:13px;">'+p.titulo+'</div>';}).join('') : '<div style="color:#666;font-size:13px;">Ninguno 👍</div>'}
-                        <button class="btn" style="margin-top:12px;width:100%;" onclick="showPage('problemas')">Ver todos</button>
+                        <div class="card-title">Problemas<span style="color:${openProblems > 0 ? '#f87171' : '#4ade80'}">${openProblems} abiertos</span></div>
+                        ${openProblems > 0 ? problems.filter(function(p){return p.status==='open';}).slice(0,2).map(function(p){return '<div style="padding:10px 0;border-bottom:1px solid #1a1a1a;font-size:13px;">⚠️ '+p.titulo+'</div>';}).join('') : '<div style="color:#666;font-size:13px;padding:8px 0;">Todo en orden 👍</div>'}
+                        <button class="btn btn-sm" style="margin-top:12px;width:100%;" onclick="showPage('problemas')">Ver todos</button>
                     </div>
                 </div>
             </div>
+            
+            <div class="footer">© 2026 GH Consulting · Todos los derechos reservados</div>
         </div>
         
         <!-- HISTORIAL -->
         <div class="page" id="page-metricas">
-            <div class="page-header"><div><h1>Historial de Métricas</h1><p>Todos tus reportes semanales</p></div></div>
-            <div class="card">
-                <div class="card-title">Reportes Semanales</div>
-                ${historyHtml}
-            </div>
+            <div class="page-header"><div><h1>📈 Historial de Métricas</h1><p>Todos tus reportes semanales</p></div></div>
+            <div class="card">${historyHtml}</div>
+            ${weeklyReports.length > 0 ? '<div class="card"><div class="card-title">Resumen del Programa</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center;"><div><div style="font-size:24px;font-weight:300;">' + weeklyReports.length + '</div><div style="font-size:10px;color:#666;margin-top:4px;">SEMANAS</div></div><div><div style="font-size:24px;font-weight:300;color:#4ade80;">€' + (totalIngresos - ingresos).toLocaleString() + '</div><div style="font-size:10px;color:#666;margin-top:4px;">GENERADO</div></div><div><div style="font-size:24px;font-weight:300;">' + (totalCalls > 0 ? Math.round((totalClientes - parseInt(data.clientes||0))/totalCalls*100) : 0) + '%</div><div style="font-size:10px;color:#666;margin-top:4px;">CIERRE</div></div><div><div style="font-size:24px;font-weight:300;">' + (weeklyReports.length > 0 ? Math.round(totalContenido/weeklyReports.length) : 0) + '</div><div style="font-size:10px;color:#666;margin-top:4px;">CONTENT/SEM</div></div></div></div>' : ''}
         </div>
         
         <!-- REPORTE -->
         <div class="page" id="page-reporte">
-            <div class="page-header"><div><h1>Reporte Semanal</h1><p>Actualiza tus métricas</p></div></div>
+            <div class="page-header"><div><h1>📝 Reporte Semanal</h1><p>Actualiza tus métricas cada semana</p></div></div>
             <div class="card">
-                <p style="color:#888;font-size:13px;margin-bottom:20px;">Envía un reporte cada semana con tus números actualizados.</p>
+                <div class="card-title">Enviar Nuevo Reporte</div>
+                <p style="color:#888;font-size:13px;margin-bottom:20px;">Completa este formulario cada semana para trackear tu progreso y que podamos ajustar la estrategia juntos.</p>
                 <button class="btn btn-success" onclick="openModal('reportModal')">📝 Completar Reporte</button>
             </div>
         </div>
@@ -359,18 +408,15 @@ if (!data || !data.nombre) {
         <!-- PROBLEMAS -->
         <div class="page" id="page-problemas">
             <div class="page-header">
-                <div><h1>Problemas</h1><p>Bloqueos y obstáculos</p></div>
-                <button class="btn btn-success" onclick="openModal('problemModal')">+ Nuevo Problema</button>
+                <div><h1>🚨 Problemas</h1><p>Bloqueos y obstáculos</p></div>
+                <button class="btn btn-success" onclick="openModal('problemModal')">+ Nuevo</button>
             </div>
-            <div class="card">
-                <div class="card-title">Registro de Problemas</div>
-                ${problemsHtml}
-            </div>
+            <div class="card">${problemsHtml}</div>
         </div>
         
         <!-- LINKS -->
         <div class="page" id="page-links">
-            <div class="page-header"><div><h1>Mis Links</h1><p>Accesos rápidos</p></div></div>
+            <div class="page-header"><div><h1>🔗 Mis Links</h1><p>Accesos rápidos a tus recursos</p></div></div>
             <div class="card">
                 ${linkHtml('📁', 'Google Drive', clientLinks.drive || 'No configurado', clientLinks.drive)}
                 ${linkHtml('🎨', 'Miro', clientLinks.miro || 'No configurado', clientLinks.miro)}
@@ -378,35 +424,36 @@ if (!data || !data.nombre) {
                 ${linkHtml('🎥', 'Fathom', clientLinks.fathom || 'No configurado', clientLinks.fathom)}
                 ${linkHtml('📅', 'Calendario', clientLinks.calendar || 'No configurado', clientLinks.calendar)}
             </div>
-            <p style="color:#666;font-size:12px;margin-top:16px;">Para configurar los links, ve a ⚙️ Configurar</p>
+            <p style="color:#555;font-size:12px;margin-top:16px;text-align:center;">Para configurar tus links, ve a ⚙️ Configurar</p>
         </div>
         
         <!-- CONFIG -->
         <div class="page" id="page-config">
-            <div class="page-header"><div><h1>Configuración</h1><p>Personaliza tu dashboard</p></div></div>
+            <div class="page-header"><div><h1>⚙️ Configuración</h1><p>Personaliza tu dashboard</p></div></div>
             <div class="card">
                 <div class="card-title">Links Personales</div>
+                <p style="color:#888;font-size:13px;margin-bottom:20px;">Añade los links a tus recursos para tenerlos siempre a mano.</p>
                 <div class="config-item">
-                    <span style="width:100px;font-size:12px;">📁 Drive</span>
+                    <span class="config-label">📁 Drive</span>
                     <input type="url" class="form-input" id="cfg_drive" placeholder="https://drive.google.com/..." value="${clientLinks.drive||''}">
                 </div>
                 <div class="config-item">
-                    <span style="width:100px;font-size:12px;">🎨 Miro</span>
+                    <span class="config-label">🎨 Miro</span>
                     <input type="url" class="form-input" id="cfg_miro" placeholder="https://miro.com/..." value="${clientLinks.miro||''}">
                 </div>
                 <div class="config-item">
-                    <span style="width:100px;font-size:12px;">📝 Notion</span>
+                    <span class="config-label">📝 Notion</span>
                     <input type="url" class="form-input" id="cfg_notion" placeholder="https://notion.so/..." value="${clientLinks.notion||''}">
                 </div>
                 <div class="config-item">
-                    <span style="width:100px;font-size:12px;">🎥 Fathom</span>
+                    <span class="config-label">🎥 Fathom</span>
                     <input type="url" class="form-input" id="cfg_fathom" placeholder="https://fathom.video/..." value="${clientLinks.fathom||''}">
                 </div>
                 <div class="config-item">
-                    <span style="width:100px;font-size:12px;">📅 Calendar</span>
+                    <span class="config-label">📅 Calendario</span>
                     <input type="url" class="form-input" id="cfg_calendar" placeholder="https://calendly.com/..." value="${clientLinks.calendar||''}">
                 </div>
-                <button class="btn btn-primary" style="margin-top:16px;" onclick="saveConfig()">Guardar Configuración</button>
+                <button class="btn btn-primary" style="margin-top:20px;width:100%;" onclick="saveConfig()">Guardar Configuración</button>
             </div>
         </div>
     `;
@@ -444,6 +491,7 @@ document.getElementById('weeklyForm').onsubmit = function(e) {
 
 document.getElementById('problemForm').onsubmit = function(e) {
     e.preventDefault();
+    if (!document.getElementById('prob_titulo').value.trim()) return;
     problems.push({
         date: new Date().toISOString(),
         titulo: document.getElementById('prob_titulo').value,
@@ -470,7 +518,7 @@ window.saveConfig = function() {
         calendar: document.getElementById('cfg_calendar').value
     };
     localStorage.setItem('gh_client_links', JSON.stringify(clientLinks));
-    alert('Configuración guardada');
+    alert('✅ Configuración guardada');
     location.reload();
 };
 
